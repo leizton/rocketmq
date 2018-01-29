@@ -21,18 +21,18 @@ import java.util.Random;
 
 public class ThreadLocalIndex {
     private final ThreadLocal<Integer> threadLocalIndex = new ThreadLocal<Integer>();
-    private final Random random = new Random();
+    private final Random random = new Random();  //= Random.nextInt()是无锁线程安全
 
     public int getAndIncrement() {
         Integer index = this.threadLocalIndex.get();
         if (null == index) {
-            index = Math.abs(random.nextInt());
+            index = Math.abs(random.nextInt());  //= 初始值取随机值
             if (index < 0)
                 index = 0;
             this.threadLocalIndex.set(index);
         }
 
-        index = Math.abs(index + 1);
+        index = Math.abs(index + 1);  //= 随后的值是增1
         if (index < 0)
             index = 0;
 

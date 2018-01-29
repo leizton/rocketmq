@@ -568,6 +568,7 @@ public class MQClientInstance {
                 try {
                     TopicRouteData topicRouteData;
                     if (isDefault && defaultMQProducer != null) {
+                        //= 获取defaultMQProducer.createTopicKey这个主题的路由
                         topicRouteData = this.mQClientAPIImpl.getDefaultTopicRouteInfoFromNameServer(defaultMQProducer.getCreateTopicKey(),
                                 1000 * 3);
                         if (topicRouteData != null) {
@@ -578,6 +579,7 @@ public class MQClientInstance {
                             }
                         }
                     } else {
+                        //= 获取topic的路由
                         topicRouteData = this.mQClientAPIImpl.getTopicRouteInfoFromNameServer(topic, 1000 * 3);
                     }
                     if (topicRouteData != null) {
@@ -596,7 +598,7 @@ public class MQClientInstance {
                                 this.brokerAddrTable.put(bd.getBrokerName(), bd.getBrokerAddrs());
                             }
 
-                            // Update Pub info
+                            //= update producer's TopicPublishInfo
                             {
                                 TopicPublishInfo publishInfo = topicRouteData2TopicPublishInfo(topic, topicRouteData);
                                 publishInfo.setHaveTopicRouterInfo(true);
@@ -610,7 +612,7 @@ public class MQClientInstance {
                                 }
                             }
 
-                            // Update sub info
+                            // update consumer's rebalanceImpl
                             {
                                 Set<MessageQueue> subscribeInfo = topicRouteData2TopicSubscribeInfo(topic, topicRouteData);
                                 Iterator<Entry<String, MQConsumerInner>> it = this.consumerTable.entrySet().iterator();
@@ -742,7 +744,7 @@ public class MQClientInstance {
             return true;
         TopicRouteData old = olddata.cloneTopicRouteData();
         TopicRouteData now = nowdata.cloneTopicRouteData();
-        Collections.sort(old.getQueueDatas());
+        Collections.sort(old.getQueueDatas());   //= 对list排序, 用于后面的比较
         Collections.sort(old.getBrokerDatas());
         Collections.sort(now.getQueueDatas());
         Collections.sort(now.getBrokerDatas());
@@ -750,6 +752,9 @@ public class MQClientInstance {
 
     }
 
+    //= 遍历判断是否要更新producer或consumer内部的路由信息
+    //= MQProducerInner.isPublishTopicNeedUpdate(topic)
+    //= MQConsumerInner.isSubscribeTopicNeedUpdate(topic)
     private boolean isNeedUpdateTopicRouteInfo(final String topic) {
         boolean result = false;
         {

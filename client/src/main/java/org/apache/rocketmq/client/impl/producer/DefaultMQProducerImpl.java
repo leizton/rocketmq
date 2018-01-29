@@ -403,6 +403,7 @@ public class DefaultMQProducerImpl implements MQProducerInner {
         this.mqFaultStrategy.updateFaultItem(brokerName, currentLatency, isolation);
     }
 
+    //= 实际的发送逻辑
     private SendResult sendDefaultImpl(
             Message msg,
             final CommunicationMode communicationMode,
@@ -416,6 +417,8 @@ public class DefaultMQProducerImpl implements MQProducerInner {
         long beginTimestampFirst = System.currentTimeMillis();
         long beginTimestampPrev = beginTimestampFirst;
         long endTimestamp = beginTimestampFirst;
+
+        //= topic的msgQueue list
         TopicPublishInfo topicPublishInfo = this.tryToFindTopicPublishInfo(msg.getTopic());
         if (topicPublishInfo != null && topicPublishInfo.ok()) {
             MessageQueue mq = null;
@@ -537,6 +540,10 @@ public class DefaultMQProducerImpl implements MQProducerInner {
                 null).setResponseCode(ClientErrorCode.NOT_FOUND_TOPIC_EXCEPTION);
     }
 
+    //= topicPublishInfoTable是本地缓存
+    //= MQClientInstance.updateTopicRouteInfoFromNameServer()
+    //=   1 MQClientAPIImpl.getDefaultTopicRouteInfoFromNameServer()同步请求name-server获取TopicRouteData
+    //=   2 update producers and consumers' topicRouteData
     private TopicPublishInfo tryToFindTopicPublishInfo(final String topic) {
         TopicPublishInfo topicPublishInfo = this.topicPublishInfoTable.get(topic);
         if (null == topicPublishInfo || !topicPublishInfo.ok()) {

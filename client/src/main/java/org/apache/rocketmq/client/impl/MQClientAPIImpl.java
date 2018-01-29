@@ -1131,7 +1131,7 @@ public class MQClientAPIImpl {
             case ResponseCode.SUCCESS: {
                 byte[] body = response.getBody();
                 if (body != null) {
-                    return TopicRouteData.decode(body, TopicRouteData.class);
+                    return TopicRouteData.decode(body, TopicRouteData.class);  //= RemotingSerializable.decode(), json
                 }
             }
             default:
