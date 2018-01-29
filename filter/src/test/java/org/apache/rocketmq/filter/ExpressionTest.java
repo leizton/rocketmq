@@ -17,12 +17,7 @@
 
 package org.apache.rocketmq.filter;
 
-import org.apache.rocketmq.filter.expression.ComparisonExpression;
-import org.apache.rocketmq.filter.expression.ConstantExpression;
-import org.apache.rocketmq.filter.expression.EvaluationContext;
-import org.apache.rocketmq.filter.expression.Expression;
-import org.apache.rocketmq.filter.expression.MQFilterException;
-import org.apache.rocketmq.filter.expression.PropertyExpression;
+import org.apache.rocketmq.filter.expression.*;
 import org.apache.rocketmq.filter.parser.SelectorParser;
 import org.junit.Test;
 
@@ -51,7 +46,7 @@ public class ExpressionTest {
         Expression expr = genExp(stringHasString);
 
         EvaluationContext context = genContext(
-            KeyValue.c("TAGS", "''tag''")
+                KeyValue.c("TAGS", "''tag''")
         );
 
         eval(expr, context, Boolean.TRUE);
@@ -60,14 +55,14 @@ public class ExpressionTest {
     @Test
     public void testEvaluate_now() throws Exception {
         EvaluationContext context = genContext(
-            KeyValue.c("a", System.currentTimeMillis())
+                KeyValue.c("a", System.currentTimeMillis())
         );
 
         Expression nowExpression = ConstantExpression.createNow();
         Expression propertyExpression = new PropertyExpression("a");
 
         Expression expression = ComparisonExpression.createLessThanEqual(propertyExpression,
-            nowExpression);
+                nowExpression);
 
         eval(expression, context, Boolean.TRUE);
     }
@@ -77,16 +72,16 @@ public class ExpressionTest {
         Expression expression = genExp("a between up and low");
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", "3.14")
+                KeyValue.c("a", "3.14")
         );
 
         eval(expression, context, Boolean.FALSE);
 
         {
             context = genContext(
-                KeyValue.c("a", "3.14"),
-                KeyValue.c("up", "up"),
-                KeyValue.c("low", "low")
+                    KeyValue.c("a", "3.14"),
+                    KeyValue.c("up", "up"),
+                    KeyValue.c("low", "low")
             );
 
             eval(expression, context, Boolean.FALSE);
@@ -96,7 +91,7 @@ public class ExpressionTest {
             expression = genExp("key is not null and key between 0 and 100");
 
             context = genContext(
-                KeyValue.c("key", "con")
+                    KeyValue.c("key", "con")
             );
 
             eval(expression, context, Boolean.FALSE);
@@ -106,7 +101,7 @@ public class ExpressionTest {
             expression = genExp("a between 0 and 100");
 
             context = genContext(
-                KeyValue.c("a", "abc")
+                    KeyValue.c("a", "abc")
             );
 
             eval(expression, context, Boolean.FALSE);
@@ -116,8 +111,8 @@ public class ExpressionTest {
             expression = genExp("a=b");
 
             context = genContext(
-                KeyValue.c("a", "3.14"),
-                KeyValue.c("b", "3.14")
+                    KeyValue.c("a", "3.14"),
+                    KeyValue.c("b", "3.14")
             );
 
             eval(expression, context, Boolean.TRUE);
@@ -127,8 +122,8 @@ public class ExpressionTest {
             expression = genExp("a<>b");
 
             context = genContext(
-                KeyValue.c("a", "3.14"),
-                KeyValue.c("b", "3.14")
+                    KeyValue.c("a", "3.14"),
+                    KeyValue.c("b", "3.14")
             );
 
             eval(expression, context, Boolean.FALSE);
@@ -138,8 +133,8 @@ public class ExpressionTest {
             expression = genExp("a<>b");
 
             context = genContext(
-                KeyValue.c("a", "3.14"),
-                KeyValue.c("b", "3.141")
+                    KeyValue.c("a", "3.14"),
+                    KeyValue.c("b", "3.141")
             );
 
             eval(expression, context, Boolean.TRUE);
@@ -151,7 +146,7 @@ public class ExpressionTest {
         Expression expression = genExp("a > 3.1E10");
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", String.valueOf(3.1415 * Math.pow(10, 10)))
+                KeyValue.c("a", String.valueOf(3.1415 * Math.pow(10, 10)))
         );
 
         eval(expression, context, Boolean.TRUE);
@@ -162,7 +157,7 @@ public class ExpressionTest {
         Expression expression = genExp("a > 3.14");
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", String.valueOf(3.1415))
+                KeyValue.c("a", String.valueOf(3.1415))
         );
 
         eval(expression, context, Boolean.TRUE);
@@ -173,8 +168,8 @@ public class ExpressionTest {
         Expression expression = genExp("a > b");
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", String.valueOf(10)),
-            KeyValue.c("b", String.valueOf(20))
+                KeyValue.c("a", String.valueOf(10)),
+                KeyValue.c("b", String.valueOf(20))
         );
 
         eval(expression, context, Boolean.FALSE);
@@ -184,8 +179,8 @@ public class ExpressionTest {
     public void testEvaluate_twoVariableGt() throws Exception {
         Expression expression = genExp("a > b");
         EvaluationContext context = genContext(
-            KeyValue.c("b", String.valueOf(10)),
-            KeyValue.c("a", String.valueOf(20))
+                KeyValue.c("b", String.valueOf(10)),
+                KeyValue.c("a", String.valueOf(20))
         );
 
         eval(expression, context, Boolean.TRUE);
@@ -201,13 +196,13 @@ public class ExpressionTest {
         eval(expression, context, Boolean.TRUE);
 
         context = genContext(
-            KeyValue.c("a", "hello")
+                KeyValue.c("a", "hello")
         );
 
         eval(expression, context, Boolean.TRUE);
 
         context = genContext(
-            KeyValue.c("a", "abc")
+                KeyValue.c("a", "abc")
         );
 
         eval(expression, context, Boolean.FALSE);
@@ -218,15 +213,15 @@ public class ExpressionTest {
         Expression expression = genExp(booleanExpression);
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", "true"),
-            KeyValue.c("b", "false")
+                KeyValue.c("a", "true"),
+                KeyValue.c("b", "false")
         );
 
         eval(expression, context, Boolean.TRUE);
 
         context = genContext(
-            KeyValue.c("a", "false"),
-            KeyValue.c("b", "true")
+                KeyValue.c("a", "false"),
+                KeyValue.c("b", "true")
         );
 
         eval(expression, context, Boolean.FALSE);
@@ -237,7 +232,7 @@ public class ExpressionTest {
         Expression expression = genExp(equalExpression);
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", "hello")
+                KeyValue.c("a", "hello")
         );
 
         eval(expression, context, Boolean.TRUE);
@@ -253,10 +248,10 @@ public class ExpressionTest {
         Expression expression = genExp(andExpression);
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", 3),
-            KeyValue.c("b", 5),
-            KeyValue.c("c", 6),
-            KeyValue.c("d", 1)
+                KeyValue.c("a", 3),
+                KeyValue.c("b", 5),
+                KeyValue.c("c", 6),
+                KeyValue.c("d", 1)
         );
 
         for (int i = 0; i < 500; i++) {
@@ -272,10 +267,10 @@ public class ExpressionTest {
 
         // use string
         context = genContext(
-            KeyValue.c("a", "3"),
-            KeyValue.c("b", "5"),
-            KeyValue.c("c", "6"),
-            KeyValue.c("d", "1")
+                KeyValue.c("a", "3"),
+                KeyValue.c("b", "5"),
+                KeyValue.c("c", "6"),
+                KeyValue.c("d", "1")
         );
 
         eval(expression, context, Boolean.TRUE);
@@ -286,20 +281,20 @@ public class ExpressionTest {
         Expression expression = genExp(andExpression);
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", 4),
-            KeyValue.c("b", 5),
-            KeyValue.c("c", 6),
-            KeyValue.c("d", 1)
+                KeyValue.c("a", 4),
+                KeyValue.c("b", 5),
+                KeyValue.c("c", 6),
+                KeyValue.c("d", 1)
         );
 
         eval(expression, context, Boolean.FALSE);
 
         // use string
         context = genContext(
-            KeyValue.c("a", "4"),
-            KeyValue.c("b", "5"),
-            KeyValue.c("c", "6"),
-            KeyValue.c("d", "1")
+                KeyValue.c("a", "4"),
+                KeyValue.c("b", "5"),
+                KeyValue.c("c", "6"),
+                KeyValue.c("d", "1")
         );
 
         eval(expression, context, Boolean.FALSE);
@@ -311,31 +306,31 @@ public class ExpressionTest {
 
         // first
         EvaluationContext context = genContext(
-            KeyValue.c("a", 3)
+                KeyValue.c("a", 3)
         );
         eval(expression, context, Boolean.TRUE);
 
         // second
         context = genContext(
-            KeyValue.c("a", 4),
-            KeyValue.c("b", 5)
+                KeyValue.c("a", 4),
+                KeyValue.c("b", 5)
         );
         eval(expression, context, Boolean.TRUE);
 
         // third
         context = genContext(
-            KeyValue.c("a", 4),
-            KeyValue.c("b", 4),
-            KeyValue.c("c", 6)
+                KeyValue.c("a", 4),
+                KeyValue.c("b", 4),
+                KeyValue.c("c", 6)
         );
         eval(expression, context, Boolean.TRUE);
 
         // forth
         context = genContext(
-            KeyValue.c("a", 4),
-            KeyValue.c("b", 4),
-            KeyValue.c("c", 3),
-            KeyValue.c("d", 2)
+                KeyValue.c("a", 4),
+                KeyValue.c("b", 4),
+                KeyValue.c("c", 3),
+                KeyValue.c("d", 2)
         );
         eval(expression, context, Boolean.TRUE);
     }
@@ -345,10 +340,10 @@ public class ExpressionTest {
         Expression expression = genExp(orExpression);
         // forth
         EvaluationContext context = genContext(
-            KeyValue.c("a", 4),
-            KeyValue.c("b", 4),
-            KeyValue.c("c", 3),
-            KeyValue.c("d", 10)
+                KeyValue.c("a", 4),
+                KeyValue.c("b", 4),
+                KeyValue.c("c", 3),
+                KeyValue.c("d", 10)
         );
         eval(expression, context, Boolean.FALSE);
     }
@@ -358,17 +353,17 @@ public class ExpressionTest {
         Expression expression = genExp(inExpression);
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", "3")
+                KeyValue.c("a", "3")
         );
         eval(expression, context, Boolean.TRUE);
 
         context = genContext(
-            KeyValue.c("a", "4")
+                KeyValue.c("a", "4")
         );
         eval(expression, context, Boolean.TRUE);
 
         context = genContext(
-            KeyValue.c("a", "5")
+                KeyValue.c("a", "5")
         );
         eval(expression, context, Boolean.TRUE);
     }
@@ -378,7 +373,7 @@ public class ExpressionTest {
         Expression expression = genExp(inExpression);
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", "8")
+                KeyValue.c("a", "8")
         );
         eval(expression, context, Boolean.FALSE);
     }
@@ -388,7 +383,7 @@ public class ExpressionTest {
         Expression expression = genExp(notInExpression);
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", "8")
+                KeyValue.c("a", "8")
         );
         eval(expression, context, Boolean.TRUE);
     }
@@ -398,17 +393,17 @@ public class ExpressionTest {
         Expression expression = genExp(notInExpression);
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", "3")
+                KeyValue.c("a", "3")
         );
         eval(expression, context, Boolean.FALSE);
 
         context = genContext(
-            KeyValue.c("a", "4")
+                KeyValue.c("a", "4")
         );
         eval(expression, context, Boolean.FALSE);
 
         context = genContext(
-            KeyValue.c("a", "5")
+                KeyValue.c("a", "5")
         );
         eval(expression, context, Boolean.FALSE);
     }
@@ -418,17 +413,17 @@ public class ExpressionTest {
         Expression expression = genExp(betweenExpression);
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", "2")
+                KeyValue.c("a", "2")
         );
         eval(expression, context, Boolean.TRUE);
 
         context = genContext(
-            KeyValue.c("a", "10")
+                KeyValue.c("a", "10")
         );
         eval(expression, context, Boolean.TRUE);
 
         context = genContext(
-            KeyValue.c("a", "3")
+                KeyValue.c("a", "3")
         );
         eval(expression, context, Boolean.TRUE);
     }
@@ -438,12 +433,12 @@ public class ExpressionTest {
         Expression expression = genExp(betweenExpression);
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", "1")
+                KeyValue.c("a", "1")
         );
         eval(expression, context, Boolean.FALSE);
 
         context = genContext(
-            KeyValue.c("a", "11")
+                KeyValue.c("a", "11")
         );
         eval(expression, context, Boolean.FALSE);
     }
@@ -453,12 +448,12 @@ public class ExpressionTest {
         Expression expression = genExp(notBetweenExpression);
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", "1")
+                KeyValue.c("a", "1")
         );
         eval(expression, context, Boolean.TRUE);
 
         context = genContext(
-            KeyValue.c("a", "11")
+                KeyValue.c("a", "11")
         );
         eval(expression, context, Boolean.TRUE);
     }
@@ -468,17 +463,17 @@ public class ExpressionTest {
         Expression expression = genExp(notBetweenExpression);
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", "2")
+                KeyValue.c("a", "2")
         );
         eval(expression, context, Boolean.FALSE);
 
         context = genContext(
-            KeyValue.c("a", "10")
+                KeyValue.c("a", "10")
         );
         eval(expression, context, Boolean.FALSE);
 
         context = genContext(
-            KeyValue.c("a", "3")
+                KeyValue.c("a", "3")
         );
         eval(expression, context, Boolean.FALSE);
     }
@@ -488,7 +483,7 @@ public class ExpressionTest {
         Expression expression = genExp(isNullExpression);
 
         EvaluationContext context = genContext(
-            KeyValue.c("abc", "2")
+                KeyValue.c("abc", "2")
         );
         eval(expression, context, Boolean.TRUE);
     }
@@ -498,7 +493,7 @@ public class ExpressionTest {
         Expression expression = genExp(isNullExpression);
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", "2")
+                KeyValue.c("a", "2")
         );
         eval(expression, context, Boolean.FALSE);
     }
@@ -508,7 +503,7 @@ public class ExpressionTest {
         Expression expression = genExp(isNotNullExpression);
 
         EvaluationContext context = genContext(
-            KeyValue.c("a", "2")
+                KeyValue.c("a", "2")
         );
         eval(expression, context, Boolean.TRUE);
     }
@@ -518,7 +513,7 @@ public class ExpressionTest {
         Expression expression = genExp(isNotNullExpression);
 
         EvaluationContext context = genContext(
-            KeyValue.c("abc", "2")
+                KeyValue.c("abc", "2")
         );
         eval(expression, context, Boolean.FALSE);
     }

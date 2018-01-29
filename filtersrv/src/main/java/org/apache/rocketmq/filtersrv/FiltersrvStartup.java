@@ -18,11 +18,6 @@ package org.apache.rocketmq.filtersrv;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.Properties;
-import java.util.concurrent.Callable;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
@@ -37,6 +32,12 @@ import org.apache.rocketmq.srvutil.ServerUtil;
 import org.apache.rocketmq.srvutil.ShutdownHookThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.concurrent.Callable;
 
 public class FiltersrvStartup {
     public static Logger log;
@@ -75,8 +76,8 @@ public class FiltersrvStartup {
         try {
             Options options = ServerUtil.buildCommandlineOptions(new Options());
             final CommandLine commandLine =
-                ServerUtil.parseCmdLine("mqfiltersrv", args, buildCommandlineOptions(options),
-                    new PosixParser());
+                    ServerUtil.parseCmdLine("mqfiltersrv", args, buildCommandlineOptions(options),
+                            new PosixParser());
             if (null == commandLine) {
                 System.exit(-1);
                 return null;
@@ -105,7 +106,7 @@ public class FiltersrvStartup {
             nettyServerConfig.setListenPort(0);
             nettyServerConfig.setServerAsyncSemaphoreValue(filtersrvConfig.getFsServerAsyncSemaphoreValue());
             nettyServerConfig.setServerCallbackExecutorThreads(filtersrvConfig
-                .getFsServerCallbackExecutorThreads());
+                    .getFsServerCallbackExecutorThreads());
             nettyServerConfig.setServerWorkerThreads(filtersrvConfig.getFsServerWorkerThreads());
 
             if (commandLine.hasOption('p')) {
@@ -128,7 +129,7 @@ public class FiltersrvStartup {
             log = LoggerFactory.getLogger(LoggerName.FILTERSRV_LOGGER_NAME);
 
             final FiltersrvController controller =
-                new FiltersrvController(filtersrvConfig, nettyServerConfig);
+                    new FiltersrvController(filtersrvConfig, nettyServerConfig);
             boolean initResult = controller.initialize();
             if (!initResult) {
                 controller.shutdown();

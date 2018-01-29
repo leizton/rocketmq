@@ -16,7 +16,6 @@
  */
 package org.apache.rocketmq.remoting.netty;
 
-import java.util.concurrent.Semaphore;
 import org.apache.rocketmq.remoting.InvokeCallback;
 import org.apache.rocketmq.remoting.common.SemaphoreReleaseOnlyOnce;
 import org.apache.rocketmq.remoting.protocol.RemotingCommand;
@@ -24,6 +23,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.concurrent.Semaphore;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -58,7 +59,7 @@ public class NettyRemotingAbstractTest {
     public void testProcessResponseCommand_NullCallBack() throws InterruptedException {
         final Semaphore semaphore = new Semaphore(0);
         ResponseFuture responseFuture = new ResponseFuture(1, 3000, null,
-            new SemaphoreReleaseOnlyOnce(semaphore));
+                new SemaphoreReleaseOnlyOnce(semaphore));
 
         remotingAbstract.responseTable.putIfAbsent(1, responseFuture);
 

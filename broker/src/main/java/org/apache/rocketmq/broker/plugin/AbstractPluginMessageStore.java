@@ -17,19 +17,12 @@
 
 package org.apache.rocketmq.broker.plugin;
 
+import org.apache.rocketmq.common.message.MessageExt;
+import org.apache.rocketmq.store.*;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Set;
-import org.apache.rocketmq.common.message.MessageExt;
-import org.apache.rocketmq.store.CommitLogDispatcher;
-import org.apache.rocketmq.store.ConsumeQueue;
-import org.apache.rocketmq.store.GetMessageResult;
-import org.apache.rocketmq.store.MessageExtBrokerInner;
-import org.apache.rocketmq.store.MessageFilter;
-import org.apache.rocketmq.store.MessageStore;
-import org.apache.rocketmq.store.PutMessageResult;
-import org.apache.rocketmq.store.QueryMessageResult;
-import org.apache.rocketmq.store.SelectMappedBufferResult;
 
 public abstract class AbstractPluginMessageStore implements MessageStore {
     protected MessageStore next = null;
@@ -87,7 +80,7 @@ public abstract class AbstractPluginMessageStore implements MessageStore {
 
     @Override
     public GetMessageResult getMessage(String group, String topic, int queueId, long offset,
-        int maxMsgNums, final MessageFilter messageFilter) {
+                                       int maxMsgNums, final MessageFilter messageFilter) {
         return next.getMessage(group, topic, queueId, offset, maxMsgNums, messageFilter);
     }
 
@@ -178,7 +171,7 @@ public abstract class AbstractPluginMessageStore implements MessageStore {
 
     @Override
     public QueryMessageResult queryMessage(String topic, String key, int maxNum, long begin,
-        long end) {
+                                           long end) {
         return next.queryMessage(topic, key, maxNum, begin, end);
     }
 

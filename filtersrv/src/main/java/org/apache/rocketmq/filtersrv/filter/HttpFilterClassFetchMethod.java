@@ -42,7 +42,7 @@ public class HttpFilterClassFetchMethod implements FilterClassFetchMethod {
             }
         } catch (Exception e) {
             log.error(
-                String.format("call <%s> exception, Topic: %s Group: %s", thisUrl, topic, consumerGroup), e);
+                    String.format("call <%s> exception, Topic: %s Group: %s", thisUrl, topic, consumerGroup), e);
         }
 
         return null;

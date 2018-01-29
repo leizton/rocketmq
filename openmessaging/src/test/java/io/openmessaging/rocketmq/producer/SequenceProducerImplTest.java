@@ -16,12 +16,7 @@
  */
 package io.openmessaging.rocketmq.producer;
 
-import io.openmessaging.BytesMessage;
-import io.openmessaging.MessageHeader;
-import io.openmessaging.MessagingAccessPoint;
-import io.openmessaging.MessagingAccessPointFactory;
-import io.openmessaging.SequenceProducer;
-import java.lang.reflect.Field;
+import io.openmessaging.*;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
@@ -35,6 +30,8 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -50,7 +47,7 @@ public class SequenceProducerImplTest {
     @Before
     public void init() throws NoSuchFieldException, IllegalAccessException {
         final MessagingAccessPoint messagingAccessPoint = MessagingAccessPointFactory
-            .getMessagingAccessPoint("openmessaging:rocketmq://IP1:9876,IP2:9876/namespace");
+                .getMessagingAccessPoint("openmessaging:rocketmq://IP1:9876,IP2:9876/namespace");
         producer = messagingAccessPoint.createSequenceProducer();
 
         Field field = AbstractOMSProducer.class.getDeclaredField("rocketmqProducer");
@@ -68,7 +65,7 @@ public class SequenceProducerImplTest {
         sendResult.setSendStatus(SendStatus.SEND_OK);
         when(rocketmqProducer.send(ArgumentMatchers.<Message>anyList())).thenReturn(sendResult);
         when(rocketmqProducer.getMaxMessageSize()).thenReturn(1024);
-        final BytesMessage message = producer.createBytesMessageToTopic("HELLO_TOPIC", new byte[] {'a'});
+        final BytesMessage message = producer.createBytesMessageToTopic("HELLO_TOPIC", new byte[]{'a'});
         producer.send(message);
         producer.commit();
         assertThat(message.headers().getString(MessageHeader.MESSAGE_ID)).isEqualTo("TestMsgID");
@@ -77,7 +74,7 @@ public class SequenceProducerImplTest {
     @Test
     public void testRollback() {
         when(rocketmqProducer.getMaxMessageSize()).thenReturn(1024);
-        final BytesMessage message = producer.createBytesMessageToTopic("HELLO_TOPIC", new byte[] {'a'});
+        final BytesMessage message = producer.createBytesMessageToTopic("HELLO_TOPIC", new byte[]{'a'});
         producer.send(message);
         producer.rollback();
         producer.commit(); //Commit nothing.

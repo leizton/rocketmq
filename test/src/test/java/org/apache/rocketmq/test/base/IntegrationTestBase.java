@@ -17,12 +17,6 @@
 
 package org.apache.rocketmq.test.base;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.rocketmq.broker.BrokerController;
 import org.apache.rocketmq.common.BrokerConfig;
 import org.apache.rocketmq.common.UtilAll;
@@ -36,6 +30,13 @@ import org.apache.rocketmq.test.util.TestUtils;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class IntegrationTestBase {
     public static Logger logger = LoggerFactory.getLogger(IntegrationTestBase.class);
@@ -160,7 +161,7 @@ public class IntegrationTestBase {
                 break;
             } else if (System.currentTimeMillis() - startTime > topicCreateTime) {
                 Assert.fail(String.format("topic[%s] is created failed after:%d ms", topic,
-                    System.currentTimeMillis() - startTime));
+                        System.currentTimeMillis() - startTime));
                 break;
             } else {
                 TestUtils.waitForMoment(500);

@@ -16,18 +16,8 @@
  */
 package io.openmessaging.rocketmq.consumer;
 
-import io.openmessaging.BytesMessage;
-import io.openmessaging.Message;
-import io.openmessaging.MessageHeader;
-import io.openmessaging.MessageListener;
-import io.openmessaging.MessagingAccessPoint;
-import io.openmessaging.MessagingAccessPointFactory;
-import io.openmessaging.OMS;
-import io.openmessaging.PushConsumer;
-import io.openmessaging.ReceivedMessageContext;
+import io.openmessaging.*;
 import io.openmessaging.rocketmq.domain.NonStandardKeys;
-import java.lang.reflect.Field;
-import java.util.Collections;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -36,6 +26,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.lang.reflect.Field;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -50,9 +43,9 @@ public class PushConsumerImplTest {
     @Before
     public void init() throws NoSuchFieldException, IllegalAccessException {
         final MessagingAccessPoint messagingAccessPoint = MessagingAccessPointFactory
-            .getMessagingAccessPoint("openmessaging:rocketmq://IP1:9876,IP2:9876/namespace");
+                .getMessagingAccessPoint("openmessaging:rocketmq://IP1:9876,IP2:9876/namespace");
         consumer = messagingAccessPoint.createPushConsumer(
-            OMS.newKeyValue().put(NonStandardKeys.CONSUMER_GROUP, "TestGroup"));
+                OMS.newKeyValue().put(NonStandardKeys.CONSUMER_GROUP, "TestGroup"));
 
         Field field = PushConsumerImpl.class.getDeclaredField("rocketmqPushConsumer");
         field.setAccessible(true);
@@ -66,7 +59,7 @@ public class PushConsumerImplTest {
 
     @Test
     public void testConsumeMessage() {
-        final byte[] testBody = new byte[] {'a', 'b'};
+        final byte[] testBody = new byte[]{'a', 'b'};
 
         MessageExt consumedMsg = new MessageExt();
         consumedMsg.setMsgId("NewMsgId");
@@ -82,6 +75,6 @@ public class PushConsumerImplTest {
             }
         });
         ((MessageListenerConcurrently) rocketmqPushConsumer
-            .getMessageListener()).consumeMessage(Collections.singletonList(consumedMsg), null);
+                .getMessageListener()).consumeMessage(Collections.singletonList(consumedMsg), null);
     }
 }

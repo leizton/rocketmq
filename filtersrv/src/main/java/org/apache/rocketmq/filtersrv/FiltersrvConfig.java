@@ -23,11 +23,11 @@ import org.apache.rocketmq.remoting.common.RemotingUtil;
 
 public class FiltersrvConfig {
     private String rocketmqHome = System.getProperty(MixAll.ROCKETMQ_HOME_PROPERTY,
-        System.getenv(MixAll.ROCKETMQ_HOME_ENV));
+            System.getenv(MixAll.ROCKETMQ_HOME_ENV));
 
     @ImportantField
     private String namesrvAddr = System.getProperty(MixAll.NAMESRV_ADDR_PROPERTY,
-        System.getenv(MixAll.NAMESRV_ADDR_ENV));
+            System.getenv(MixAll.NAMESRV_ADDR_ENV));
 
     private String connectWhichBroker = "127.0.0.1:10911";
     private String filterServerIP = RemotingUtil.getLocalAddress();

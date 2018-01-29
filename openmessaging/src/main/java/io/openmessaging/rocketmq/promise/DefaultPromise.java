@@ -19,10 +19,11 @@ package io.openmessaging.rocketmq.promise;
 import io.openmessaging.Promise;
 import io.openmessaging.PromiseListener;
 import io.openmessaging.exception.OMSRuntimeException;
-import java.util.ArrayList;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultPromise<V> implements Promise<V> {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultPromise.class);

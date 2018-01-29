@@ -18,23 +18,13 @@ package org.apache.rocketmq.namesrv.processor;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.rocketmq.common.TopicConfig;
 import org.apache.rocketmq.common.namesrv.NamesrvConfig;
 import org.apache.rocketmq.common.namesrv.RegisterBrokerResult;
 import org.apache.rocketmq.common.protocol.RequestCode;
 import org.apache.rocketmq.common.protocol.ResponseCode;
 import org.apache.rocketmq.common.protocol.body.TopicConfigSerializeWrapper;
-import org.apache.rocketmq.common.protocol.header.namesrv.DeleteKVConfigRequestHeader;
-import org.apache.rocketmq.common.protocol.header.namesrv.GetKVConfigRequestHeader;
-import org.apache.rocketmq.common.protocol.header.namesrv.GetKVConfigResponseHeader;
-import org.apache.rocketmq.common.protocol.header.namesrv.PutKVConfigRequestHeader;
-import org.apache.rocketmq.common.protocol.header.namesrv.RegisterBrokerRequestHeader;
+import org.apache.rocketmq.common.protocol.header.namesrv.*;
 import org.apache.rocketmq.common.protocol.route.BrokerData;
 import org.apache.rocketmq.namesrv.NamesrvController;
 import org.apache.rocketmq.namesrv.routeinfo.RouteInfoManager;
@@ -45,6 +35,13 @@ import org.assertj.core.util.Maps;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -87,7 +84,7 @@ public class DefaultRequestProcessorTest {
     public void testProcessRequest_PutKVConfig() throws RemotingCommandException {
         PutKVConfigRequestHeader header = new PutKVConfigRequestHeader();
         RemotingCommand request = RemotingCommand.createRequestCommand(RequestCode.PUT_KV_CONFIG,
-            header);
+                header);
         request.addExtField("namespace", "namespace");
         request.addExtField("key", "key");
         request.addExtField("value", "value");
@@ -98,7 +95,7 @@ public class DefaultRequestProcessorTest {
         assertThat(response.getRemark()).isNull();
 
         assertThat(namesrvController.getKvConfigManager().getKVConfig("namespace", "key"))
-            .isEqualTo("value");
+                .isEqualTo("value");
     }
 
     @Test
@@ -107,7 +104,7 @@ public class DefaultRequestProcessorTest {
 
         GetKVConfigRequestHeader header = new GetKVConfigRequestHeader();
         RemotingCommand request = RemotingCommand.createRequestCommand(RequestCode.GET_KV_CONFIG,
-            header);
+                header);
         request.addExtField("namespace", "namespace");
         request.addExtField("key", "key");
 
@@ -117,7 +114,7 @@ public class DefaultRequestProcessorTest {
         assertThat(response.getRemark()).isNull();
 
         GetKVConfigResponseHeader responseHeader = (GetKVConfigResponseHeader) response
-            .readCustomHeader();
+                .readCustomHeader();
 
         assertThat(responseHeader.getValue()).isEqualTo("value");
     }
@@ -126,7 +123,7 @@ public class DefaultRequestProcessorTest {
     public void testProcessRequest_GetKVConfigReturnNull() throws RemotingCommandException {
         GetKVConfigRequestHeader header = new GetKVConfigRequestHeader();
         RemotingCommand request = RemotingCommand.createRequestCommand(RequestCode.GET_KV_CONFIG,
-            header);
+                header);
         request.addExtField("namespace", "namespace");
         request.addExtField("key", "key");
 
@@ -136,7 +133,7 @@ public class DefaultRequestProcessorTest {
         assertThat(response.getRemark()).isEqualTo("No config item, Namespace: namespace Key: key");
 
         GetKVConfigResponseHeader responseHeader = (GetKVConfigResponseHeader) response
-            .readCustomHeader();
+                .readCustomHeader();
 
         assertThat(responseHeader.getValue()).isNull();
     }
@@ -147,7 +144,7 @@ public class DefaultRequestProcessorTest {
 
         DeleteKVConfigRequestHeader header = new DeleteKVConfigRequestHeader();
         RemotingCommand request = RemotingCommand.createRequestCommand(RequestCode.DELETE_KV_CONFIG,
-            header);
+                header);
         request.addExtField("namespace", "namespace");
         request.addExtField("key", "key");
 
@@ -157,12 +154,12 @@ public class DefaultRequestProcessorTest {
         assertThat(response.getRemark()).isNull();
 
         assertThat(namesrvController.getKvConfigManager().getKVConfig("namespace", "key"))
-            .isNull();
+                .isNull();
     }
 
     @Test
     public void testProcessRequest_RegisterBroker() throws RemotingCommandException,
-        NoSuchFieldException, IllegalAccessException {
+            NoSuchFieldException, IllegalAccessException {
         RemotingCommand request = genSampleRegisterCmd(true);
 
         ChannelHandlerContext ctx = mock(ChannelHandlerContext.class);
@@ -182,12 +179,12 @@ public class DefaultRequestProcessorTest {
         broker.setBrokerAddrs((HashMap) Maps.newHashMap(new Long(2333), "10.10.1.1"));
 
         assertThat((Map) brokerAddrTable.get(routes))
-            .contains(new HashMap.SimpleEntry("broker", broker));
+                .contains(new HashMap.SimpleEntry("broker", broker));
     }
 
     @Test
     public void testProcessRequest_RegisterBrokerWithFilterServer() throws RemotingCommandException,
-        NoSuchFieldException, IllegalAccessException {
+            NoSuchFieldException, IllegalAccessException {
         RemotingCommand request = genSampleRegisterCmd(true);
 
         // version >= MQVersion.Version.V3_0_11.ordinal() to register with filter server
@@ -210,7 +207,7 @@ public class DefaultRequestProcessorTest {
         broker.setBrokerAddrs((HashMap) Maps.newHashMap(new Long(2333), "10.10.1.1"));
 
         assertThat((Map) brokerAddrTable.get(routes))
-            .contains(new HashMap.SimpleEntry("broker", broker));
+                .contains(new HashMap.SimpleEntry("broker", broker));
     }
 
     @Test
@@ -240,7 +237,7 @@ public class DefaultRequestProcessorTest {
         RegisterBrokerRequestHeader header = new RegisterBrokerRequestHeader();
         header.setBrokerName("broker");
         RemotingCommand request = RemotingCommand.createRequestCommand(
-            reg ? RequestCode.REGISTER_BROKER : RequestCode.UNREGISTER_BROKER, header);
+                reg ? RequestCode.REGISTER_BROKER : RequestCode.UNREGISTER_BROKER, header);
         request.addExtField("brokerName", "broker");
         request.addExtField("brokerAddr", "10.10.1.1");
         request.addExtField("clusterName", "cluster");
@@ -270,7 +267,7 @@ public class DefaultRequestProcessorTest {
         topicConfigSerializeWrapper.setTopicConfigTable(topicConfigConcurrentHashMap);
         Channel channel = mock(Channel.class);
         RegisterBrokerResult registerBrokerResult = routeInfoManager.registerBroker("default-cluster", "127.0.0.1:10911", "default-broker", 1234, "127.0.0.1:1001",
-            topicConfigSerializeWrapper, new ArrayList<String>(), channel);
+                topicConfigSerializeWrapper, new ArrayList<String>(), channel);
 
     }
 }

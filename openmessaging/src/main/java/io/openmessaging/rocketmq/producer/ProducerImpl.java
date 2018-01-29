@@ -16,14 +16,7 @@
  */
 package io.openmessaging.rocketmq.producer;
 
-import io.openmessaging.BytesMessage;
-import io.openmessaging.KeyValue;
-import io.openmessaging.Message;
-import io.openmessaging.MessageHeader;
-import io.openmessaging.Producer;
-import io.openmessaging.Promise;
-import io.openmessaging.PropertyKeys;
-import io.openmessaging.SendResult;
+import io.openmessaging.*;
 import io.openmessaging.exception.OMSRuntimeException;
 import io.openmessaging.rocketmq.promise.DefaultPromise;
 import io.openmessaging.rocketmq.utils.OMSUtil;
@@ -51,7 +44,7 @@ public class ProducerImpl extends AbstractOMSProducer implements Producer {
     @Override
     public SendResult send(final Message message, final KeyValue properties) {
         long timeout = properties.containsKey(PropertyKeys.OPERATION_TIMEOUT)
-            ? properties.getInt(PropertyKeys.OPERATION_TIMEOUT) : this.rocketmqProducer.getSendMsgTimeout();
+                ? properties.getInt(PropertyKeys.OPERATION_TIMEOUT) : this.rocketmqProducer.getSendMsgTimeout();
         return send(message, timeout);
     }
 
@@ -80,7 +73,7 @@ public class ProducerImpl extends AbstractOMSProducer implements Producer {
     @Override
     public Promise<SendResult> sendAsync(final Message message, final KeyValue properties) {
         long timeout = properties.containsKey(PropertyKeys.OPERATION_TIMEOUT)
-            ? properties.getInt(PropertyKeys.OPERATION_TIMEOUT) : this.rocketmqProducer.getSendMsgTimeout();
+                ? properties.getInt(PropertyKeys.OPERATION_TIMEOUT) : this.rocketmqProducer.getSendMsgTimeout();
         return sendAsync(message, timeout);
     }
 

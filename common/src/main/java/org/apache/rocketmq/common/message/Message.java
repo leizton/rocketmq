@@ -79,13 +79,13 @@ public class Message implements Serializable {
     public void putUserProperty(final String name, final String value) {
         if (MessageConst.STRING_HASH_SET.contains(name)) {
             throw new RuntimeException(String.format(
-                "The Property<%s> is used by system, input another please", name));
+                    "The Property<%s> is used by system, input another please", name));
         }
 
         if (value == null || value.trim().isEmpty()
-            || name == null || name.trim().isEmpty()) {
+                || name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException(
-                "The name or value of property can not be null or blank string!"
+                    "The name or value of property can not be null or blank string!"
             );
         }
 
@@ -194,6 +194,6 @@ public class Message implements Serializable {
     @Override
     public String toString() {
         return "Message [topic=" + topic + ", flag=" + flag + ", properties=" + properties + ", body="
-            + (body != null ? body.length : 0) + "]";
+                + (body != null ? body.length : 0) + "]";
     }
 }

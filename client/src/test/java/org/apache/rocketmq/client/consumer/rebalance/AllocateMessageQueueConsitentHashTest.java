@@ -16,18 +16,13 @@
  */
 package org.apache.rocketmq.client.consumer.rebalance;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.TreeMap;
 import org.apache.rocketmq.client.consumer.AllocateMessageQueueStrategy;
-import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.common.message.MessageQueue;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.*;
 
 public class AllocateMessageQueueConsitentHashTest {
 
@@ -129,7 +124,7 @@ public class AllocateMessageQueueConsitentHashTest {
             }
 
             Assert.assertTrue(
-                verifyAllocateAll(cidBegin, mqAll, allocatedResAll));
+                    verifyAllocateAll(cidBegin, mqAll, allocatedResAll));
         }
 
         Map<MessageQueue, String> allocateToAllAfterRemoveOne = new TreeMap<MessageQueue, String>();
@@ -159,7 +154,7 @@ public class AllocateMessageQueueConsitentHashTest {
             }
 
             Assert.assertTrue("queueSize" + queueSize + "consumerSize:" + consumerSize + "\nmqAll:" + mqAll + "\nallocatedResAllAfterRemove" + allocatedResAllAfterRemove,
-                verifyAllocateAll(cidAfterRemoveOne, mqAll, allocatedResAllAfterRemove));
+                    verifyAllocateAll(cidAfterRemoveOne, mqAll, allocatedResAllAfterRemove));
             verifyAfterRemove(allocateToAllOrigin, allocateToAllAfterRemoveOne, removeCID);
         }
 
@@ -186,13 +181,13 @@ public class AllocateMessageQueueConsitentHashTest {
             }
 
             Assert.assertTrue(
-                verifyAllocateAll(cidAfterAdd, mqAll, allocatedResAllAfterAdd));
+                    verifyAllocateAll(cidAfterAdd, mqAll, allocatedResAllAfterAdd));
             verifyAfterAdd(allocateToAllAfterRemoveOne, allocateToAll3, newCid);
         }
     }
 
     private boolean verifyAllocateAll(List<String> cidAll, List<MessageQueue> mqAll,
-        List<MessageQueue> allocatedResAll) {
+                                      List<MessageQueue> allocatedResAll) {
         if (cidAll.isEmpty()) {
             return allocatedResAll.isEmpty();
         }
@@ -200,7 +195,7 @@ public class AllocateMessageQueueConsitentHashTest {
     }
 
     private void verifyAfterRemove(Map<MessageQueue, String> allocateToBefore, Map<MessageQueue, String> allocateAfter,
-        String removeCID) {
+                                   String removeCID) {
         for (MessageQueue mq : allocateToBefore.keySet()) {
             String allocateToOrigin = allocateToBefore.get(mq);
             if (allocateToOrigin.equals(removeCID)) {
@@ -212,7 +207,7 @@ public class AllocateMessageQueueConsitentHashTest {
     }
 
     private void verifyAfterAdd(Map<MessageQueue, String> allocateBefore, Map<MessageQueue, String> allocateAfter,
-        String newCID) {
+                                String newCID) {
         for (MessageQueue mq : allocateAfter.keySet()) {
             String allocateToOrigin = allocateBefore.get(mq);
             String allocateToAfter = allocateAfter.get(mq);

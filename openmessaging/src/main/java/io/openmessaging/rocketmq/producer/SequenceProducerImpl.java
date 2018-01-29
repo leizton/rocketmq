@@ -16,19 +16,16 @@
  */
 package io.openmessaging.rocketmq.producer;
 
-import io.openmessaging.BytesMessage;
-import io.openmessaging.KeyValue;
-import io.openmessaging.Message;
-import io.openmessaging.MessageHeader;
-import io.openmessaging.SequenceProducer;
+import io.openmessaging.*;
 import io.openmessaging.rocketmq.utils.OMSUtil;
+import org.apache.rocketmq.client.Validators;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.producer.SendResult;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import org.apache.rocketmq.client.Validators;
-import org.apache.rocketmq.client.exception.MQClientException;
-import org.apache.rocketmq.client.producer.SendResult;
 
 public class SequenceProducerImpl extends AbstractOMSProducer implements SequenceProducer {
 

@@ -16,19 +16,14 @@
  */
 package org.apache.rocketmq.example.openmessaging;
 
-import io.openmessaging.Message;
-import io.openmessaging.MessagingAccessPoint;
-import io.openmessaging.MessagingAccessPointFactory;
-import io.openmessaging.Producer;
-import io.openmessaging.Promise;
-import io.openmessaging.PromiseListener;
-import io.openmessaging.SendResult;
+import io.openmessaging.*;
+
 import java.nio.charset.Charset;
 
 public class SimpleProducer {
     public static void main(String[] args) {
         final MessagingAccessPoint messagingAccessPoint = MessagingAccessPointFactory
-            .getMessagingAccessPoint("openmessaging:rocketmq://IP1:9876,IP2:9876/namespace");
+                .getMessagingAccessPoint("openmessaging:rocketmq://IP1:9876,IP2:9876/namespace");
 
         final Producer producer = messagingAccessPoint.createProducer();
 

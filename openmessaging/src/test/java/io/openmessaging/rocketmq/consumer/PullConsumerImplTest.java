@@ -16,17 +16,9 @@
  */
 package io.openmessaging.rocketmq.consumer;
 
-import io.openmessaging.BytesMessage;
-import io.openmessaging.Message;
-import io.openmessaging.MessageHeader;
-import io.openmessaging.MessagingAccessPoint;
-import io.openmessaging.MessagingAccessPointFactory;
-import io.openmessaging.OMS;
-import io.openmessaging.PropertyKeys;
-import io.openmessaging.PullConsumer;
+import io.openmessaging.*;
 import io.openmessaging.rocketmq.config.ClientConfig;
 import io.openmessaging.rocketmq.domain.NonStandardKeys;
-import java.lang.reflect.Field;
 import org.apache.rocketmq.client.consumer.DefaultMQPullConsumer;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.junit.Before;
@@ -34,6 +26,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
@@ -51,10 +45,10 @@ public class PullConsumerImplTest {
     @Before
     public void init() throws NoSuchFieldException, IllegalAccessException {
         final MessagingAccessPoint messagingAccessPoint = MessagingAccessPointFactory
-            .getMessagingAccessPoint("openmessaging:rocketmq://IP1:9876,IP2:9876/namespace");
+                .getMessagingAccessPoint("openmessaging:rocketmq://IP1:9876,IP2:9876/namespace");
 
         consumer = messagingAccessPoint.createPullConsumer(queueName,
-            OMS.newKeyValue().put(NonStandardKeys.CONSUMER_GROUP, "TestGroup"));
+                OMS.newKeyValue().put(NonStandardKeys.CONSUMER_GROUP, "TestGroup"));
 
         Field field = PullConsumerImpl.class.getDeclaredField("rocketmqPullConsumer");
         field.setAccessible(true);
@@ -74,7 +68,7 @@ public class PullConsumerImplTest {
 
     @Test
     public void testPoll() {
-        final byte[] testBody = new byte[] {'a', 'b'};
+        final byte[] testBody = new byte[]{'a', 'b'};
         MessageExt consumedMsg = new MessageExt();
         consumedMsg.setMsgId("NewMsgId");
         consumedMsg.setBody(testBody);

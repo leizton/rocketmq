@@ -16,15 +16,7 @@
  */
 package io.openmessaging.rocketmq;
 
-import io.openmessaging.IterableConsumer;
-import io.openmessaging.KeyValue;
-import io.openmessaging.MessagingAccessPoint;
-import io.openmessaging.Producer;
-import io.openmessaging.PullConsumer;
-import io.openmessaging.PushConsumer;
-import io.openmessaging.ResourceManager;
-import io.openmessaging.SequenceProducer;
-import io.openmessaging.ServiceEndPoint;
+import io.openmessaging.*;
 import io.openmessaging.exception.OMSNotSupportedException;
 import io.openmessaging.observer.Observer;
 import io.openmessaging.rocketmq.consumer.PullConsumerImpl;

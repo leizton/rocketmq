@@ -21,6 +21,7 @@
 package org.apache.rocketmq.common.protocol.heartbeat;
 
 import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -168,8 +169,8 @@ public class SubscriptionData implements Comparable<SubscriptionData> {
     @Override
     public String toString() {
         return "SubscriptionData [classFilterMode=" + classFilterMode + ", topic=" + topic + ", subString="
-            + subString + ", tagsSet=" + tagsSet + ", codeSet=" + codeSet + ", subVersion=" + subVersion
-            + ", expressionType=" + expressionType + "]";
+                + subString + ", tagsSet=" + tagsSet + ", codeSet=" + codeSet + ", subVersion=" + subVersion
+                + ", expressionType=" + expressionType + "]";
     }
 
     @Override

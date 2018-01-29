@@ -44,8 +44,8 @@ public class ParserTest {
     @Test
     public void testParse_valid() {
         for (String expr : Arrays.asList(
-            andExpression, orExpression, inExpression, notInExpression, betweenExpression,
-            equalNullExpression, notEqualNullExpression, nowExpression
+                andExpression, orExpression, inExpression, notInExpression, betweenExpression,
+                equalNullExpression, notEqualNullExpression, nowExpression
         )) {
 
             try {

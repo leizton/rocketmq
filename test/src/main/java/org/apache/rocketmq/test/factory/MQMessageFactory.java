@@ -17,15 +17,11 @@
 
 package org.apache.rocketmq.test.factory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.common.message.MessageQueue;
 import org.apache.rocketmq.test.util.RandomUtil;
+
+import java.util.*;
 
 public class MQMessageFactory {
     private static Integer index = 0;
@@ -96,7 +92,7 @@ public class MQMessageFactory {
     }
 
     public static Map<MessageQueue, List<Object>> getMsgByMQ(List<MessageQueue> mqs, int msgSize,
-        String tag) {
+                                                             String tag) {
         Map<MessageQueue, List<Object>> msgs = new HashMap<MessageQueue, List<Object>>();
         for (MessageQueue mq : mqs) {
             msgs.put(mq, getMsg(mq.getTopic(), msgSize, tag));

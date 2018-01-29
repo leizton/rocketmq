@@ -16,22 +16,19 @@
  */
 package io.openmessaging.rocketmq.utils;
 
-import io.openmessaging.BytesMessage;
-import io.openmessaging.KeyValue;
-import io.openmessaging.MessageHeader;
-import io.openmessaging.OMS;
-import io.openmessaging.SendResult;
+import io.openmessaging.*;
 import io.openmessaging.rocketmq.domain.BytesMessageImpl;
 import io.openmessaging.rocketmq.domain.NonStandardKeys;
 import io.openmessaging.rocketmq.domain.SendResultImpl;
+import org.apache.rocketmq.client.producer.SendStatus;
+import org.apache.rocketmq.common.UtilAll;
+import org.apache.rocketmq.common.message.MessageAccessor;
+
 import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import org.apache.rocketmq.client.producer.SendStatus;
-import org.apache.rocketmq.common.UtilAll;
-import org.apache.rocketmq.common.message.MessageAccessor;
 
 public class OMSUtil {
 
@@ -91,7 +88,7 @@ public class OMSUtil {
 
         omsMsg.putHeaders(MessageHeader.MESSAGE_ID, rmqMsg.getMsgId());
         if (!rmqMsg.getProperties().containsKey(NonStandardKeys.MESSAGE_DESTINATION) ||
-            rmqMsg.getProperties().get(NonStandardKeys.MESSAGE_DESTINATION).equals("TOPIC")) {
+                rmqMsg.getProperties().get(NonStandardKeys.MESSAGE_DESTINATION).equals("TOPIC")) {
             omsMsg.putHeaders(MessageHeader.TOPIC, rmqMsg.getTopic());
         } else {
             omsMsg.putHeaders(MessageHeader.QUEUE, rmqMsg.getTopic());
