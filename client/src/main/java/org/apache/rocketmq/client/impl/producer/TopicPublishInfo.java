@@ -29,7 +29,7 @@ public class TopicPublishInfo {
     private boolean orderTopic = false;
     private boolean haveTopicRouterInfo = false;
     private List<MessageQueue> messageQueueList = new ArrayList<MessageQueue>();  //= 可用的msgQueue list
-    private volatile ThreadLocalIndex sendWhichQueue = new ThreadLocalIndex();    //= 轮询msgQueue
+    private volatile ThreadLocalIndex sendWhichQueue = new ThreadLocalIndex();    //= 轮询msgQueue, 初始值是随机值
     private TopicRouteData topicRouteData;
 
     public boolean isOrderTopic() {

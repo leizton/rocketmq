@@ -57,6 +57,7 @@ public class MQFaultStrategy {
 
     public MessageQueue selectOneMessageQueue(final TopicPublishInfo tpInfo, final String lastBrokerName) {
         if (this.sendLatencyFaultEnable) {
+            //= 默认关闭发送延迟容错
             try {
                 int index = tpInfo.getSendWhichQueue().getAndIncrement();
                 for (int i = 0; i < tpInfo.getMessageQueueList().size(); i++) {
@@ -99,6 +100,8 @@ public class MQFaultStrategy {
         }
     }
 
+    //= 计算实际的不可用时间
+    //= 把currentLatency正则化到notAvailableDuration[]的取值空间
     private long computeNotAvailableDuration(final long currentLatency) {
         for (int i = latencyMax.length - 1; i >= 0; i--) {
             if (currentLatency >= latencyMax[i])

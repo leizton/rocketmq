@@ -424,6 +424,12 @@ public class DefaultMQProducerImpl implements MQProducerInner {
             MessageQueue mq = null;
             Exception exception = null;
             SendResult sendResult = null;
+
+            //= 最多发送timesTotal次
+            //=   1. 选择msgQueue, MQFaultStrategy.selectOneMessageQueue(topicPublishInfo, lastBrokerName)
+            //=      MQFaultStrategy包装了发送延迟容错, 正常情况调用TopicPublishInfo.selectOneMessageQueue()轮询mq
+            //=   2. 发送, this.sendKernelImpl()
+            //=   3. 禁用broker一段时间, LatencyFaultToleranceImpl.updateFaultItem(msgQueue.brokerName)
             int timesTotal = communicationMode == CommunicationMode.SYNC ? 1 + this.defaultMQProducer.getRetryTimesWhenSendFailed() : 1;
             int times = 0;
             String[] brokersSent = new String[timesTotal];

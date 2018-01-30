@@ -100,7 +100,7 @@ public class LatencyFaultToleranceImpl implements LatencyFaultTolerance<String> 
     class FaultItem implements Comparable<FaultItem> {
         private final String name;
         private volatile long currentLatency;
-        private volatile long startTimestamp;
+        private volatile long startTimestamp;  //= 恢复时间戳
 
         public FaultItem(final String name) {
             this.name = name;
