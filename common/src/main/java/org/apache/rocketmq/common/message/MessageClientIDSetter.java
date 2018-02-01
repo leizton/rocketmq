@@ -32,6 +32,7 @@ public class MessageClientIDSetter {
     private static long nextStartTime;
 
     static {
+        //= ip(4) pid(2) hashcode(4)
         LEN = 4 + 2 + 4 + 4 + 2;
         ByteBuffer tempBuffer = ByteBuffer.allocate(10);
         tempBuffer.position(2);
@@ -107,6 +108,7 @@ public class MessageClientIDSetter {
         return sb.toString();
     }
 
+    //= 与当前月第1天的时间差 + 自增数
     private static byte[] createUniqIDBuffer() {
         ByteBuffer buffer = ByteBuffer.allocate(4 + 2);
         long current = System.currentTimeMillis();

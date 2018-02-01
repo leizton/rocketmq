@@ -21,6 +21,17 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/*//=
+(topic, body)
+(topic, tags, body)
+(topic, tags, keys, body)
+(topic, tags, keys, flag, body, waitStoreMsgOK)
+
+tags, keys放在properties里
+
+putUserProperty(name, value)
+setDelayTimeLevel(level), @ref MessageStoreConfig.messageDelayLevel(level对应的时间), ScheduleMessageService(impl)
+//=*/
 public class Message implements Serializable {
     private static final long serialVersionUID = 8445773977080406428L;
 

@@ -219,10 +219,12 @@ public class MQClientAPIImpl {
             final SendMessageRequestHeader requestHeader,
             final long timeoutMillis,
             final CommunicationMode communicationMode,
+            //=
             final SendCallback sendCallback,
             final TopicPublishInfo topicPublishInfo,
             final MQClientInstance instance,
             final int retryTimesWhenSendFailed,
+            //=
             final SendMessageContext context,
             final DefaultMQProducerImpl producer
     ) throws RemotingException, MQBrokerException, InterruptedException {
@@ -273,6 +275,7 @@ public class MQClientAPIImpl {
             final Message msg,
             final long timeoutMillis,
             final RemotingCommand request,
+            //=
             final SendCallback sendCallback,
             final TopicPublishInfo topicPublishInfo,
             final MQClientInstance instance,

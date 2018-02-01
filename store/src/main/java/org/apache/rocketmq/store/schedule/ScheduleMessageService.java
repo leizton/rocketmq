@@ -94,6 +94,7 @@ public class ScheduleMessageService extends ConfigManager {
 
     public void start() {
 
+        // DeliverDelayedMessageTimerTask.executeOnTimeup()
         for (Map.Entry<Integer, Long> entry : this.delayLevelTable.entrySet()) {
             Integer level = entry.getKey();
             Long timeDelay = entry.getValue();
@@ -107,6 +108,7 @@ public class ScheduleMessageService extends ConfigManager {
             }
         }
 
+        //= 定时(10s)把 this.offsetTable 用json格式持久化到文件
         this.timer.scheduleAtFixedRate(new TimerTask() {
 
             @Override
@@ -161,7 +163,8 @@ public class ScheduleMessageService extends ConfigManager {
         return delayOffsetSerializeWrapper.toJson(prettyFormat);
     }
 
-    public boolean parseDelayLevel() {
+    // 把MessageStoreConfig.messageDelayLevel解析成Map<level, delayTimeMillis>
+    private boolean parseDelayLevel() {
         HashMap<String, Long> timeUnitTable = new HashMap<String, Long>();
         timeUnitTable.put("s", 1000L);
         timeUnitTable.put("m", 1000L * 60);
@@ -229,7 +232,7 @@ public class ScheduleMessageService extends ConfigManager {
             return result;
         }
 
-        public void executeOnTimeup() {
+        private void executeOnTimeup() {
             ConsumeQueue cq =
                     ScheduleMessageService.this.defaultMessageStore.findConsumeQueue(SCHEDULE_TOPIC,
                             delayLevel2QueueId(delayLevel));

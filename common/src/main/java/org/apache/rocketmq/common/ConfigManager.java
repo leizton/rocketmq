@@ -68,6 +68,7 @@ public abstract class ConfigManager {
 
     public abstract void decode(final String jsonString);
 
+    //= 调用抽象方法encode()获取要持久化的数据
     public synchronized void persist() {
         String jsonString = this.encode(true);
         if (jsonString != null) {
