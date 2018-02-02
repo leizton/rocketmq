@@ -344,6 +344,7 @@ public class MQClientAPIImpl {
         });
     }
 
+    //= 最多重试timesTotal次
     private void onExceptionImpl(final String brokerName,
                                  final Message msg,
                                  final long timeoutMillis,
@@ -401,6 +402,8 @@ public class MQClientAPIImpl {
         }
     }
 
+    //= if success, 从response中解析出SendResult{msgId,msgQueue}
+    //= if fail, throw MQBrokerException
     private SendResult processSendResponse(
             final String brokerName,
             final Message msg,
@@ -410,6 +413,7 @@ public class MQClientAPIImpl {
             case ResponseCode.FLUSH_DISK_TIMEOUT:
             case ResponseCode.FLUSH_SLAVE_TIMEOUT:
             case ResponseCode.SLAVE_NOT_AVAILABLE: {
+                //= 后面抛出MQBrokerException
             }
             case ResponseCode.SUCCESS: {
                 SendStatus sendStatus = SendStatus.SEND_OK;

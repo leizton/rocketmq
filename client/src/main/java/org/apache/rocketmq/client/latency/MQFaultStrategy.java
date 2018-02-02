@@ -90,6 +90,7 @@ public class MQFaultStrategy {
             return tpInfo.selectOneMessageQueue();
         }
 
+        //= 实际是轮询
         return tpInfo.selectOneMessageQueue(lastBrokerName);
     }
 
