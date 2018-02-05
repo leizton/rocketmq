@@ -59,7 +59,7 @@ public class Configuration {
     }
 
     public Configuration(Logger log, String storePath, Object... configObjects) {
-        this(log, configObjects);
+        this(log, configObjects);  //= 把configObjects都merge到this.allConfigs
         this.storePath = storePath;
     }
 
@@ -275,6 +275,7 @@ public class Configuration {
         return stringBuilder.toString();
     }
 
+    //= 把from的属性merge到to
     private void merge(Properties from, Properties to) {
         for (Object key : from.keySet()) {
             Object fromObj = from.get(key), toObj = to.get(key);
@@ -285,6 +286,7 @@ public class Configuration {
         }
     }
 
+    //= 只merge to中含有的属性
     private void mergeIfExist(Properties from, Properties to) {
         for (Object key : from.keySet()) {
             if (!to.containsKey(key)) {

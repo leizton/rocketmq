@@ -123,6 +123,7 @@ public class BrokerController {
         this.nettyServerConfig = nettyServerConfig;
         this.nettyClientConfig = nettyClientConfig;
         this.messageStoreConfig = messageStoreConfig;
+
         this.consumerOffsetManager = new ConsumerOffsetManager(this);
         this.topicConfigManager = new TopicConfigManager(this);
         this.pullMessageProcessor = new PullMessageProcessor(this);
@@ -152,7 +153,7 @@ public class BrokerController {
         this.brokerFastFailure = new BrokerFastFailure(this);
         this.configuration = new Configuration(
                 log,
-                BrokerPathConfigHelper.getBrokerConfigPath(),
+                BrokerPathConfigHelper.getBrokerConfigPath(),  //= storePath
                 this.brokerConfig, this.nettyServerConfig, this.nettyClientConfig, this.messageStoreConfig
         );
     }
