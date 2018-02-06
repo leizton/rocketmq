@@ -54,6 +54,8 @@ public class BrokerStartup {
     public static Logger log;
 
     public static void main(String[] args) {
+        //= createBrokerController() -> BrokerController.initialize()
+        //= start() -> BrokerController.start()
         start(createBrokerController(args));
     }
 
