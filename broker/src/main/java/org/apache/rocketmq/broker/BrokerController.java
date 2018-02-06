@@ -247,6 +247,7 @@ public class BrokerController {
                     Executors.newFixedThreadPool(this.brokerConfig.getConsumerManageThreadPoolNums(), new ThreadFactoryImpl(
                             "ConsumerManageThread_"));
 
+            //= 注册processor
             this.registerProcessor();
 
             final long initialDelay = UtilAll.computNextMorningTimeMillis() - System.currentTimeMillis();
@@ -373,9 +374,8 @@ public class BrokerController {
     }
 
     public void registerProcessor() {
-        /**
-         * SendMessageProcessor
-         */
+        //= SendMessageProcessor
+        //= 接收消息
         SendMessageProcessor sendProcessor = new SendMessageProcessor(this);
         sendProcessor.registerSendMessageHook(sendMessageHookList);
         sendProcessor.registerConsumeMessageHook(consumeMessageHookList);
@@ -388,6 +388,7 @@ public class BrokerController {
         this.fastRemotingServer.registerProcessor(RequestCode.SEND_MESSAGE_V2, sendProcessor, this.sendMessageExecutor);
         this.fastRemotingServer.registerProcessor(RequestCode.SEND_BATCH_MESSAGE, sendProcessor, this.sendMessageExecutor);
         this.fastRemotingServer.registerProcessor(RequestCode.CONSUMER_SEND_MSG_BACK, sendProcessor, this.sendMessageExecutor);
+
         /**
          * PullMessageProcessor
          */

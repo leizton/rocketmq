@@ -156,7 +156,7 @@ public abstract class NettyRemotingAbstract {
      * @param cmd request command.
      */
     public void processRequestCommand(final ChannelHandlerContext ctx, final RemotingCommand cmd) {
-        final Pair<NettyRequestProcessor, ExecutorService> matched = this.processorTable.get(cmd.getCode());
+        final Pair<NettyRequestProcessor, ExecutorService> matched = this.processorTable.get(cmd.getCode());  //= 从processorTable取出processor
         final Pair<NettyRequestProcessor, ExecutorService> pair = null == matched ? this.defaultRequestProcessor : matched;
         final int opaque = cmd.getOpaque();
 
@@ -170,6 +170,7 @@ public abstract class NettyRemotingAbstract {
                             rpcHook.doBeforeRequest(RemotingHelper.parseChannelRemoteAddr(ctx.channel()), cmd);
                         }
 
+                        //= NettyRequestProcessor.processRequest()
                         final RemotingCommand response = pair.getObject1().processRequest(ctx, cmd);
                         if (rpcHook != null) {
                             rpcHook.doAfterResponse(RemotingHelper.parseChannelRemoteAddr(ctx.channel()), cmd, response);
@@ -213,6 +214,7 @@ public abstract class NettyRemotingAbstract {
             }
 
             try {
+                //= 等待线程池执行run.run()
                 final RequestTask requestTask = new RequestTask(run, ctx.channel(), cmd);
                 pair.getObject2().submit(requestTask);
             } catch (RejectedExecutionException e) {
