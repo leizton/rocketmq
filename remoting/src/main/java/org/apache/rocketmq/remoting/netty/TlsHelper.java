@@ -77,6 +77,7 @@ public class TlsHelper {
         }
 
         if (forClient) {
+            //= client端
             if (tlsTestModeEnable) {
                 return SslContextBuilder
                         .forClient()
@@ -102,7 +103,7 @@ public class TlsHelper {
                         .build();
             }
         } else {
-
+            //= server端
             if (tlsTestModeEnable) {
                 SelfSignedCertificate selfSignedCertificate = new SelfSignedCertificate();
                 return SslContextBuilder
