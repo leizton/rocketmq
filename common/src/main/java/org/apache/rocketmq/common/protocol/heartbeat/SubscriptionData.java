@@ -20,7 +20,7 @@
  */
 package org.apache.rocketmq.common.protocol.heartbeat;
 
-import com.alibaba.fastjson.annotation.JSONField;
+//import com.alibaba.fastjson.annotation.JSONField;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,7 +35,7 @@ public class SubscriptionData implements Comparable<SubscriptionData> {
     private long subVersion = System.currentTimeMillis();
     private String expressionType;
 
-    @JSONField(serialize = false)
+    //@JSONField(serialize = false)
     private String filterClassSource;
 
     public SubscriptionData() {

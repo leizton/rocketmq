@@ -134,6 +134,7 @@ public abstract class NettyRemotingAbstract {
      * @throws Exception if there were any error while processing the incoming command.
      */
     public void processMessageReceived(ChannelHandlerContext ctx, RemotingCommand msg) throws Exception {
+        //= msg通过NettyDecoder.decode() -> RemotingCommand.decode(ByteBuf)解码出来
         final RemotingCommand cmd = msg;
         if (cmd != null) {
             switch (cmd.getType()) {

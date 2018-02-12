@@ -66,6 +66,7 @@ import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+//= 依赖NettyRemotingClient实现sendMsg/pullMsg
 public class MQClientAPIImpl {
 
     private final static Logger log = ClientLogger.getLog();

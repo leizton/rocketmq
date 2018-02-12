@@ -16,7 +16,7 @@
  */
 package org.apache.rocketmq.remoting.protocol;
 
-import com.alibaba.fastjson.annotation.JSONField;
+//import com.alibaba.fastjson.annotation.JSONField;
 import org.apache.rocketmq.remoting.CommandCustomHeader;
 import org.apache.rocketmq.remoting.annotation.CFNotNull;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
@@ -86,6 +86,8 @@ public class RemotingCommand {
     protected RemotingCommand() {
     }
 
+    //= DefaultMQProducerImpl.sendKernelImpl()  -> SendMessageRequestHeader
+    //= MQClientAPIImpl.consumerSendMessageBack -> ConsumerSendMsgBackRequestHeader
     public static RemotingCommand createRequestCommand(int code, CommandCustomHeader customHeader) {
         RemotingCommand cmd = new RemotingCommand();
         cmd.setCode(code);
@@ -142,6 +144,7 @@ public class RemotingCommand {
         return decode(byteBuffer);
     }
 
+    //= 被NettyDecoder用于解码
     public static RemotingCommand decode(final ByteBuffer byteBuffer) {
         int length = byteBuffer.limit();
         int oriHeaderLen = byteBuffer.getInt();
@@ -150,6 +153,7 @@ public class RemotingCommand {
         byte[] headerData = new byte[headerLength];
         byteBuffer.get(headerData);
 
+        //= 解出extFields
         RemotingCommand cmd = headerDecode(headerData, getProtocolType(oriHeaderLen));
 
         int bodyLength = length - 4 - headerLength;
@@ -247,6 +251,7 @@ public class RemotingCommand {
 
             Field[] fields = getClazzFields(classHeader);
             for (Field field : fields) {
+                //= Modifier.isStatic()判断非静态字段
                 if (!Modifier.isStatic(field.getModifiers())) {
                     String fieldName = field.getName();
                     if (!fieldName.startsWith("this")) {
@@ -277,7 +282,7 @@ public class RemotingCommand {
                                 throw new RemotingCommandException("the custom field <" + fieldName + "> type is not supported");
                             }
 
-                            field.set(objectHeader, valueParsed);
+                            field.set(objectHeader, valueParsed);  //= Field.set(obj,v)
 
                         } catch (Throwable e) {
                             log.error("Failed field [{}] decoding", fieldName, e);
@@ -292,6 +297,7 @@ public class RemotingCommand {
         return objectHeader;
     }
 
+    //= 增加map缓存, 避免每次调用Class.getDeclaredFields()
     private Field[] getClazzFields(Class<? extends CommandCustomHeader> classHeader) {
         Field[] field = CLASS_HASH_MAP.get(classHeader);
 
@@ -383,7 +389,7 @@ public class RemotingCommand {
                         Object value = null;
                         try {
                             field.setAccessible(true);
-                            value = field.get(this.customHeader);
+                            value = field.get(this.customHeader);  //= Field.get(obj):v
                         } catch (Exception e) {
                             log.error("Failed to access field [{}]", name, e);
                         }
@@ -435,7 +441,7 @@ public class RemotingCommand {
         this.flag |= bits;
     }
 
-    @JSONField(serialize = false)
+    //@JSONField(serialize = false)
     public boolean isOnewayRPC() {
         int bits = 1 << RPC_ONEWAY;
         return (this.flag & bits) == bits;
@@ -449,7 +455,7 @@ public class RemotingCommand {
         this.code = code;
     }
 
-    @JSONField(serialize = false)
+    //@JSONField(serialize = false)
     public RemotingCommandType getType() {
         if (this.isResponseType()) {
             return RemotingCommandType.RESPONSE_COMMAND;
@@ -458,7 +464,7 @@ public class RemotingCommand {
         return RemotingCommandType.REQUEST_COMMAND;
     }
 
-    @JSONField(serialize = false)
+    //@JSONField(serialize = false)
     public boolean isResponseType() {
         int bits = 1 << RPC_TYPE;
         return (this.flag & bits) == bits;

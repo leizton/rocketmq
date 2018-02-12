@@ -373,13 +373,16 @@ public class BrokerController {
         return result;
     }
 
+    //= 注册处理器(processor, handler)
     public void registerProcessor() {
-        //= SendMessageProcessor
-        //= 接收消息
+        /**
+         * SendMessageProcessor
+         */
         SendMessageProcessor sendProcessor = new SendMessageProcessor(this);
         sendProcessor.registerSendMessageHook(sendMessageHookList);
         sendProcessor.registerConsumeMessageHook(consumeMessageHookList);
 
+        //= 注册接收消息的处理器
         this.remotingServer.registerProcessor(RequestCode.SEND_MESSAGE, sendProcessor, this.sendMessageExecutor);
         this.remotingServer.registerProcessor(RequestCode.SEND_MESSAGE_V2, sendProcessor, this.sendMessageExecutor);
         this.remotingServer.registerProcessor(RequestCode.SEND_BATCH_MESSAGE, sendProcessor, this.sendMessageExecutor);
