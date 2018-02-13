@@ -57,6 +57,9 @@ public class TopicConfigManager extends ConfigManager {
 
     public TopicConfigManager(BrokerController brokerController) {
         this.brokerController = brokerController;
+
+        //= 初始化topicConfigTable
+        //= system topics: SELF_TEST_TOPIC(自测topic), DEFAULT_TOPIC(每个topic的默认配置), BENCHMARK_TOPIC, OFFSET_MOVED_EVENT, clusterName, brokerName
         {
             // MixAll.SELF_TEST_TOPIC
             String topic = MixAll.SELF_TEST_TOPIC;
@@ -143,6 +146,7 @@ public class TopicConfigManager extends ConfigManager {
         return this.topicConfigTable.get(topic);
     }
 
+    //= 继承了DEFAULT_TOPIC的配置
     public TopicConfig createTopicInSendMessageMethod(final String topic, final String defaultTopic,
                                                       final String remoteAddress, final int clientDefaultTopicQueueNums, final int topicSysFlag) {
         TopicConfig topicConfig = null;
@@ -166,16 +170,10 @@ public class TopicConfigManager extends ConfigManager {
                         if (PermName.isInherited(defaultTopicConfig.getPerm())) {
                             topicConfig = new TopicConfig(topic);
 
-                            int queueNums =
-                                    clientDefaultTopicQueueNums > defaultTopicConfig.getWriteQueueNums() ? defaultTopicConfig
-                                            .getWriteQueueNums() : clientDefaultTopicQueueNums;
-
-                            if (queueNums < 0) {
-                                queueNums = 0;
-                            }
-
+                            int queueNums = Math.max(0, Math.min(clientDefaultTopicQueueNums, defaultTopicConfig.getWriteQueueNums()));
                             topicConfig.setReadQueueNums(queueNums);
                             topicConfig.setWriteQueueNums(queueNums);
+
                             int perm = defaultTopicConfig.getPerm();
                             perm &= ~PermName.PERM_INHERIT;
                             topicConfig.setPerm(perm);

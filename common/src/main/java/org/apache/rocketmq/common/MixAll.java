@@ -68,9 +68,9 @@ public class MixAll {
     public static final long MASTER_ID = 0L;
     public static final long CURRENT_JVM_PID = getPID();
 
-    public static final String RETRY_GROUP_TOPIC_PREFIX = "%RETRY%";
+    public static final String RETRY_GROUP_TOPIC_PREFIX = "%RETRY%";  //= retry topic的前缀
 
-    public static final String DLQ_GROUP_TOPIC_PREFIX = "%DLQ%";
+    public static final String DLQ_GROUP_TOPIC_PREFIX = "%DLQ%";  //= dead line topic的前缀
     public static final String SYSTEM_TOPIC_PREFIX = "rmq_sys_";
     public static final String UNIQUE_MSG_QUERY_FLAG = "_UNIQUE_KEY_QUERY";
     public static final String DEFAULT_TRACE_REGION_ID = "DefaultRegion";

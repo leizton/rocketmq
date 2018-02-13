@@ -86,8 +86,9 @@ public class RemotingCommand {
     protected RemotingCommand() {
     }
 
-    //= DefaultMQProducerImpl.sendKernelImpl()  -> SendMessageRequestHeader
-    //= MQClientAPIImpl.consumerSendMessageBack -> ConsumerSendMsgBackRequestHeader
+    //= DefaultMQProducerImpl.sendKernelImpl()    -> SendMessageRequestHeader
+    //= MQClientAPIImpl.consumerSendMessageBack() -> ConsumerSendMsgBackRequestHeader
+    //= SendMessageProcessor.sendMessage()        -> SendMessageResponseHeader
     public static RemotingCommand createRequestCommand(int code, CommandCustomHeader customHeader) {
         RemotingCommand cmd = new RemotingCommand();
         cmd.setCode(code);
@@ -109,6 +110,11 @@ public class RemotingCommand {
         }
     }
 
+    public static RemotingCommand createResponseCommand(int code, String remark) {
+        return createResponseCommand(code, remark, null);
+    }
+
+    //= 调用classHeader.newInstance()创建CommandCustomHeader实例
     public static RemotingCommand createResponseCommand(Class<? extends CommandCustomHeader> classHeader) {
         return createResponseCommand(RemotingSysResponseCode.SYSTEM_ERROR, "not set any response code", classHeader);
     }
@@ -133,10 +139,6 @@ public class RemotingCommand {
         }
 
         return cmd;
-    }
-
-    public static RemotingCommand createResponseCommand(int code, String remark) {
-        return createResponseCommand(code, remark, null);
     }
 
     public static RemotingCommand decode(final byte[] array) {

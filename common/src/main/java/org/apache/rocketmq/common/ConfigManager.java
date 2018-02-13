@@ -68,7 +68,8 @@ public abstract class ConfigManager {
 
     public abstract void decode(final String jsonString);
 
-    //= 调用抽象方法encode()获取要持久化的数据
+    //= 1. 调用抽象方法encode()获取要持久化的json数据
+    //= 2. 把json数据写入configFilePath()指定的文件里
     public synchronized void persist() {
         String jsonString = this.encode(true);
         if (jsonString != null) {

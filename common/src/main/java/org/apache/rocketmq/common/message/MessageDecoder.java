@@ -376,9 +376,9 @@ public class MessageDecoder {
                 final String value = entry.getValue();
 
                 sb.append(name);
-                sb.append(NAME_VALUE_SEPARATOR);
+                sb.append(NAME_VALUE_SEPARATOR);  //= char(1)不可见分割符
                 sb.append(value);
-                sb.append(PROPERTY_SEPARATOR);
+                sb.append(PROPERTY_SEPARATOR);  //= char(2)不可见分割符
             }
         }
         return sb.toString();
