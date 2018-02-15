@@ -235,6 +235,7 @@ public abstract class AbstractSendMessageProcessor implements NettyRequestProces
         this.sendMessageHookList = sendMessageHookList;
     }
 
+    // ctx.writeAndFlush(response)
     protected void doResponse(ChannelHandlerContext ctx, RemotingCommand request,
                               final RemotingCommand response) {
         if (!request.isOnewayRPC()) {

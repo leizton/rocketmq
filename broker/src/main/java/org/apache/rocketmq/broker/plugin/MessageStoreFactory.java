@@ -31,6 +31,7 @@ public final class MessageStoreFactory {
             for (int i = pluginClasses.length - 1; i >= 0; --i) {
                 String pluginClass = pluginClasses[i];
                 try {
+                    //= pluginClass是AbstractPluginMessageStore的具体子类的类名
                     @SuppressWarnings("unchecked")
                     Class<AbstractPluginMessageStore> clazz = (Class<AbstractPluginMessageStore>) Class.forName(pluginClass);
                     Constructor<AbstractPluginMessageStore> construct = clazz.getConstructor(MessageStorePluginContext.class, MessageStore.class);

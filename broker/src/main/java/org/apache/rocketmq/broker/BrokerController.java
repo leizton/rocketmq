@@ -182,12 +182,11 @@ public class BrokerController {
         result = result && this.consumerFilterManager.load();
 
         if (result) {
+            //= messageStore = new DefaultMessageStore()
             try {
-                this.messageStore =
-                        new DefaultMessageStore(this.messageStoreConfig, this.brokerStatsManager, this.messageArrivingListener,
-                                this.brokerConfig);
+                this.messageStore = new DefaultMessageStore(messageStoreConfig, brokerStatsManager, messageArrivingListener, brokerConfig);
                 this.brokerStats = new BrokerStats((DefaultMessageStore) this.messageStore);
-                //load plugin
+                //= load plugin, 默认没有plugin, 即默认messageStore是DefaultMessageStore
                 MessageStorePluginContext context = new MessageStorePluginContext(messageStoreConfig, brokerStatsManager, messageArrivingListener, brokerConfig);
                 this.messageStore = MessageStoreFactory.build(context, this.messageStore);
                 this.messageStore.getDispatcherList().addFirst(new CommitLogDispatcherCalcBitMap(this.brokerConfig, this.consumerFilterManager));
@@ -197,6 +196,7 @@ public class BrokerController {
             }
         }
 
+        //= messageStore.load()
         result = result && this.messageStore.load();
 
         if (result) {

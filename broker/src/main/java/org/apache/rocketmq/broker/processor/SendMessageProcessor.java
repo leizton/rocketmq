@@ -340,7 +340,7 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
         msgInner.setStoreHost(this.getStoreHost());
         msgInner.setReconsumeTimes(requestHeader.getReconsumeTimes() == null ? 0 : requestHeader.getReconsumeTimes());
 
-        if (this.brokerController.getBrokerConfig().isRejectTransactionMessage()) {
+        if (this.brokerController.getBrokerConfig().isRejectTransactionMessage()) {  //= broker不接收事务msg
             String traFlag = msgInner.getProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED);
             if (traFlag != null) {
                 response.setCode(ResponseCode.NO_PERMISSION);
@@ -350,6 +350,7 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
             }
         }
 
+        //= putMessage()
         PutMessageResult putMessageResult = this.brokerController.getMessageStore().putMessage(msgInner);
 
         return handlePutMessageResult(putMessageResult, response, request, msgInner, responseHeader, sendMessageContext, ctx, queueIdInt);
@@ -430,6 +431,7 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
             responseHeader.setQueueId(queueIdInt);
             responseHeader.setQueueOffset(putMessageResult.getAppendMessageResult().getLogicsOffset());
 
+            //= send msg response
             doResponse(ctx, request, response);
 
             if (hasSendMessageHook()) {
