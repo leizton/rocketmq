@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+//= 管理MappedFile
 public class MappedFileQueue {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.STORE_LOGGER_NAME);
     private static final Logger LOG_ERROR = LoggerFactory.getLogger(LoggerName.STORE_ERROR_LOGGER_NAME);
@@ -141,15 +142,16 @@ public class MappedFileQueue {
         }
     }
 
+    //= 加载commitLog目录下的所有文件成MappedFile, 放到mappedFiles里
     public boolean load() {
         File dir = new File(this.storePath);
         File[] files = dir.listFiles();
         if (files != null) {
-            // ascending order
-            Arrays.sort(files);
+            Arrays.sort(files);  //= sort by File.getPath()
             for (File file : files) {
 
                 if (file.length() != this.mappedFileSize) {
+                    //= 最后一个commitLog文件, 还有空闲空间未写完
                     log.warn(file + "\t" + file.length()
                             + " length not matched message store config value, ignore it");
                     return true;
@@ -419,6 +421,7 @@ public class MappedFileQueue {
         return deleteCount;
     }
 
+    //= 找到当前flush到哪个MappedFile, 然后调用这个MappedFile的flush()
     public boolean flush(final int flushLeastPages) {
         boolean result = true;
         MappedFile mappedFile = this.findMappedFileByOffset(this.flushedWhere, this.flushedWhere == 0);

@@ -107,7 +107,14 @@ public class BrokerStartup {
             nettyClientConfig.setUseTLS(Boolean.parseBoolean(System.getProperty(TLS_ENABLE,
                     String.valueOf(TlsSystemConfig.tlsMode == TlsMode.ENFORCING))));
             nettyServerConfig.setListenPort(10911);
+
             final MessageStoreConfig messageStoreConfig = new MessageStoreConfig();
+            final String storeRootPath = System.getProperty("user.home") + "/store/rocketmq-test";
+            messageStoreConfig.setStorePathRootDir(storeRootPath);
+            messageStoreConfig.setStorePathCommitLog(storeRootPath + "/commitlog");
+            messageStoreConfig.setMapedFileSizeCommitLog(1024);
+            messageStoreConfig.setMapedFileSizeConsumeQueue(1024);
+
             if (BrokerRole.SLAVE == messageStoreConfig.getBrokerRole()) {
                 int ratio = messageStoreConfig.getAccessMessageInMemoryMaxRatio() - 10;
                 messageStoreConfig.setAccessMessageInMemoryMaxRatio(ratio);

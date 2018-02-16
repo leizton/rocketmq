@@ -34,6 +34,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+//= 实现delay-msg
 public class ScheduleMessageService extends ConfigManager {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.STORE_LOGGER_NAME);
 
@@ -94,7 +95,7 @@ public class ScheduleMessageService extends ConfigManager {
 
     public void start() {
 
-        // DeliverDelayedMessageTimerTask.executeOnTimeup()
+        //= delayLevelTable的每种延迟都对应一个DeliverDelayedMessageTimerTask.executeOnTimeup()
         for (Map.Entry<Integer, Long> entry : this.delayLevelTable.entrySet()) {
             Integer level = entry.getKey();
             Long timeDelay = entry.getValue();
@@ -104,6 +105,7 @@ public class ScheduleMessageService extends ConfigManager {
             }
 
             if (timeDelay != null) {
+                //= FIRST_DELAY_TIME是最短的延迟时间, 延迟单元
                 this.timer.schedule(new DeliverDelayedMessageTimerTask(level, offset), FIRST_DELAY_TIME);
             }
         }
@@ -163,7 +165,7 @@ public class ScheduleMessageService extends ConfigManager {
         return delayOffsetSerializeWrapper.toJson(prettyFormat);
     }
 
-    // 把MessageStoreConfig.messageDelayLevel解析成Map<level, delayTimeMillis>
+    //= 把MessageStoreConfig.messageDelayLevel解析成Map<level, delayTimeMillis>
     private boolean parseDelayLevel() {
         HashMap<String, Long> timeUnitTable = new HashMap<String, Long>();
         timeUnitTable.put("s", 1000L);
@@ -217,9 +219,6 @@ public class ScheduleMessageService extends ConfigManager {
             }
         }
 
-        /**
-         * @return
-         */
         private long correctDeliverTimestamp(final long now, final long deliverTimestamp) {
 
             long result = deliverTimestamp;

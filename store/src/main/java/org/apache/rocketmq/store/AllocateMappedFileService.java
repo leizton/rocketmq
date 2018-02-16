@@ -144,9 +144,8 @@ public class AllocateMappedFileService extends ServiceThread {
         log.info(this.getServiceName() + " service end");
     }
 
-    /**
-     * Only interrupted by the external thread, will return false
-     */
+    //= 处理requestQueue里的AllocateRequest请求
+    //= 只在被其他线程中断时, 才返回false, 退出run()
     private boolean mmapOperation() {
         boolean isSuccess = false;
         AllocateRequest req = null;
@@ -188,10 +187,8 @@ public class AllocateMappedFileService extends ServiceThread {
                 }
 
                 // pre write mappedFile
-                if (mappedFile.getFileSize() >= this.messageStore.getMessageStoreConfig()
-                        .getMapedFileSizeCommitLog()
-                        &&
-                        this.messageStore.getMessageStoreConfig().isWarmMapedFileEnable()) {
+                if (mappedFile.getFileSize() >= this.messageStore.getMessageStoreConfig().getMapedFileSizeCommitLog()
+                        && this.messageStore.getMessageStoreConfig().isWarmMapedFileEnable()) {
                     mappedFile.warmMappedFile(this.messageStore.getMessageStoreConfig().getFlushDiskType(),
                             this.messageStore.getMessageStoreConfig().getFlushLeastPagesWhenWarmMapedFile());
                 }

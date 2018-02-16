@@ -91,6 +91,7 @@ public class CommitLog {
     }
 
     public void start() {
+        //= if flushCommitLogService是FlushRealTimeService, 定时调用MappedFileQueue.flush()
         this.flushCommitLogService.start();
 
         if (defaultMessageStore.getMessageStoreConfig().isTransientStorePoolEnable()) {

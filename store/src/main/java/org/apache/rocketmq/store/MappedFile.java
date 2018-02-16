@@ -55,11 +55,13 @@ public class MappedFile extends ReferenceResource {
     private final AtomicInteger flushedPosition = new AtomicInteger(0);
     protected int fileSize;
     protected FileChannel fileChannel;
-    /**
-     * Message will put to here first, and then reput to FileChannel if writeBuffer is not null.
-     */
+
+    //= msg先放到writeBuffer, 再放到fileChannel
+    //= writeBuffer在commit0()方法里被写入fileChannel
     protected ByteBuffer writeBuffer = null;
+    //= writeBuffer是从transientStorePool里借出和归还
     protected TransientStorePool transientStorePool = null;
+
     private String fileName;
     private long fileFromOffset;
     private File file;
@@ -155,7 +157,7 @@ public class MappedFile extends ReferenceResource {
         this.fileName = fileName;
         this.fileSize = fileSize;
         this.file = new File(fileName);
-        this.fileFromOffset = Long.parseLong(this.file.getName());
+        this.fileFromOffset = Long.parseLong(this.file.getName());  //= commitLog的文件名就是物理起始offset
         boolean ok = false;
 
         ensureDirOK(this.file.getParent());

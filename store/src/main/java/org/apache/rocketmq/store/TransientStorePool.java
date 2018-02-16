@@ -29,6 +29,7 @@ import java.nio.ByteBuffer;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+//= 用于commitLog的DirectByteBuffer缓冲池
 public class TransientStorePool {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.STORE_LOGGER_NAME);
 
@@ -49,10 +50,14 @@ public class TransientStorePool {
      */
     public void init() {
         for (int i = 0; i < poolSize; i++) {
+            //= DirectByteBuffer用堆外内存(Unsafe.allocateMemory()使用malloc库函数,返回分配出的内存地址)
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(fileSize);
 
             final long address = ((DirectBuffer) byteBuffer).address();
             Pointer pointer = new Pointer(address);
+
+            //= http://caprica.github.io/vlcj/javadoc/2.4.0/uk/co/caprica/vlcj/binding/LibC.html
+            //= 把虚拟地址内存空间锁定在RAM上, 防止进入swap
             LibC.INSTANCE.mlock(pointer, new NativeLong(fileSize));
 
             availableBuffers.offer(byteBuffer);

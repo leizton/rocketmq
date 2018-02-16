@@ -52,10 +52,11 @@ public class DefaultMessageStore implements MessageStore {
 
     private final MessageStoreConfig messageStoreConfig;
 
-    // CommitLog
+    //= CommitLog
     private final CommitLog commitLog;
 
-    private final ConcurrentMap<String/* topic */, ConcurrentMap<Integer/* queueId */, ConsumeQueue>> consumeQueueTable;
+    //= (topic, queueId) -> consumeQueue
+    private final ConcurrentMap<String, ConcurrentMap<Integer, ConsumeQueue>> consumeQueueTable;
 
     private final FlushConsumeQueueService flushConsumeQueueService;
 
@@ -150,9 +151,7 @@ public class DefaultMessageStore implements MessageStore {
         }
     }
 
-    /**
-     * @throws IOException
-     */
+    //= BrokerController.initialize()里调用
     public boolean load() {
         boolean result = true;
 
@@ -160,14 +159,15 @@ public class DefaultMessageStore implements MessageStore {
             boolean lastExitOK = !this.isTempFileExist();
             log.info("last shutdown {}", lastExitOK ? "normally" : "abnormally");
 
+            //= 用于延迟msg
             if (null != scheduleMessageService) {
                 result = result && this.scheduleMessageService.load();
             }
 
-            // load Commit Log
+            //= load Commit Log
             result = result && this.commitLog.load();
 
-            // load Consume Queue
+            //= init consumeQueueTable
             result = result && this.loadConsumeQueue();
 
             if (result) {
@@ -192,9 +192,7 @@ public class DefaultMessageStore implements MessageStore {
         return result;
     }
 
-    /**
-     * @throws Exception
-     */
+    //= BrokerController.start()里调用
     public void start() throws Exception {
 
         lock = lockFile.getChannel().tryLock(0, 1, false);
@@ -290,6 +288,7 @@ public class DefaultMessageStore implements MessageStore {
         }
     }
 
+    //= 实际调用commitLog.putMessage(msg)
     public PutMessageResult putMessage(MessageExtBrokerInner msg) {
         if (this.shutdown) {
             log.warn("message store has shutdown, so putMessage is forbidden");
@@ -316,11 +315,13 @@ public class DefaultMessageStore implements MessageStore {
             this.printTimes.set(0);
         }
 
+        //= topic最长127
         if (msg.getTopic().length() > Byte.MAX_VALUE) {
             log.warn("putMessage message topic length too long " + msg.getTopic().length());
             return new PutMessageResult(PutMessageStatus.MESSAGE_ILLEGAL, null);
         }
 
+        //= propStr最长32767
         if (msg.getPropertiesString() != null && msg.getPropertiesString().length() > Short.MAX_VALUE) {
             log.warn("putMessage message properties length too long " + msg.getPropertiesString().length());
             return new PutMessageResult(PutMessageStatus.PROPERTIES_SIZE_EXCEEDED, null);
@@ -331,6 +332,8 @@ public class DefaultMessageStore implements MessageStore {
         }
 
         long beginTime = this.getSystemClock().now();
+
+        //= commitLog.putMessage(msg)
         PutMessageResult result = this.commitLog.putMessage(msg);
 
         long eclipseTime = this.getSystemClock().now() - beginTime;
@@ -406,9 +409,7 @@ public class DefaultMessageStore implements MessageStore {
     public boolean isOSPageCacheBusy() {
         long begin = this.getCommitLog().getBeginTimeInLock();
         long diff = this.systemClock.now() - begin;
-
-        return diff < 10000000
-                && diff > this.messageStoreConfig.getOsPageCacheBusyTimeOutMills();
+        return this.messageStoreConfig.getOsPageCacheBusyTimeOutMills() < diff && diff < 10000000;  //= 1~10_000s
     }
 
     @Override
@@ -1226,8 +1227,22 @@ public class DefaultMessageStore implements MessageStore {
         return file.exists();
     }
 
+    //= 初始化consumeQueueTable
     private boolean loadConsumeQueue() {
-        File dirLogic = new File(StorePathConfigHelper.getStorePathConsumeQueue(this.messageStoreConfig.getStorePathRootDir()));
+        /*//=
+        目录结构
+        - store/rocketmq/
+          - topicA
+            - 0(queueId)
+              - 00000000002604000000
+              - 00000000002610000000
+            - 1(queueId)
+              - 00000000002610000000
+              - 00000000002616000000
+          - topicB
+        //=*/
+        final String consumeQueueDirPath = StorePathConfigHelper.getStorePathConsumeQueue(this.messageStoreConfig.getStorePathRootDir());
+        File dirLogic = new File(consumeQueueDirPath);
         File[] fileTopicList = dirLogic.listFiles();
         if (fileTopicList != null) {
 
@@ -1243,12 +1258,7 @@ public class DefaultMessageStore implements MessageStore {
                         } catch (NumberFormatException e) {
                             continue;
                         }
-                        ConsumeQueue logic = new ConsumeQueue(
-                                topic,
-                                queueId,
-                                StorePathConfigHelper.getStorePathConsumeQueue(this.messageStoreConfig.getStorePathRootDir()),
-                                this.getMessageStoreConfig().getMapedFileSizeConsumeQueue(),
-                                this);
+                        ConsumeQueue logic = new ConsumeQueue(topic, queueId, consumeQueueDirPath, this.getMessageStoreConfig().getMapedFileSizeConsumeQueue(), this);
                         this.putConsumeQueue(topic, queueId, logic);
                         if (!logic.load()) {
                             return false;
