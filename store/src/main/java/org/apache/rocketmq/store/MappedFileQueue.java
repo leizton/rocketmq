@@ -194,11 +194,10 @@ public class MappedFileQueue {
         long createOffset = -1;
         MappedFile mappedFileLast = getLastMappedFile();
 
+        //= createOffset是新文件的MappedFile.fileFromOffset, 相对所有文件的物理offset
         if (mappedFileLast == null) {
             createOffset = startOffset - (startOffset % this.mappedFileSize);
-        }
-
-        if (mappedFileLast != null && mappedFileLast.isFull()) {
+        } else if (mappedFileLast.isFull()) {
             createOffset = mappedFileLast.getFileFromOffset() + this.mappedFileSize;
         }
 
