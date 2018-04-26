@@ -49,6 +49,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+//= 包括client上的TopicService功能: 创建topic, 查询topic的queues
 public class MQAdminImpl {
 
     private final Logger log = ClientLogger.getLog();

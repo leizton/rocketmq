@@ -53,6 +53,9 @@ import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.*;
 
+//= sendMsg实现的实际位置, @ref $.sendDefaultImpl()
+//= 通信层依赖 MQClientAPIImpl 实现sendMsg
+//= sendDefaultImpl() -> sendKernelImpl() -> MQClientAPIImpl.sendMessage()
 public class DefaultMQProducerImpl implements MQProducerInner {
     private final Logger log = ClientLogger.getLog();
     private final Random random = new Random();
@@ -395,6 +398,7 @@ public class DefaultMQProducerImpl implements MQProducerInner {
         }
     }
 
+    //= 选择发送队列
     public MessageQueue selectOneMessageQueue(final TopicPublishInfo tpInfo, final String lastBrokerName) {
         return this.mqFaultStrategy.selectOneMessageQueue(tpInfo, lastBrokerName);
     }

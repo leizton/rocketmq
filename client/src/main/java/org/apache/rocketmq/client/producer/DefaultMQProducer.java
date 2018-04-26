@@ -49,6 +49,8 @@ import java.util.concurrent.ExecutorService;
  * and used among multiple threads context.
  * </p>
  */
+//= sendMsg的entryPoint, 提供用户发msg的接口
+//= 包装 DefaultMQProducerImpl, 实际的发送实现在DefaultMQProducerImpl
 public class DefaultMQProducer extends ClientConfig implements MQProducer {
 
     /**

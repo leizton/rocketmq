@@ -227,8 +227,9 @@ public class MQClientAPIImpl {
             final int retryTimesWhenSendFailed,
             //=
             final SendMessageContext context,
-            final DefaultMQProducerImpl producer
-    ) throws RemotingException, MQBrokerException, InterruptedException {
+            final DefaultMQProducerImpl producer) throws RemotingException, MQBrokerException, InterruptedException {
+
+        //= 构造request
         RemotingCommand request = null;
         if (sendSmartMsg || msg instanceof MessageBatch) {
             SendMessageRequestHeaderV2 requestHeaderV2 = SendMessageRequestHeaderV2.createSendMessageRequestHeaderV2(requestHeader);
@@ -236,7 +237,6 @@ public class MQClientAPIImpl {
         } else {
             request = RemotingCommand.createRequestCommand(RequestCode.SEND_MESSAGE, requestHeader);
         }
-
         request.setBody(msg.getBody());
 
         switch (communicationMode) {
