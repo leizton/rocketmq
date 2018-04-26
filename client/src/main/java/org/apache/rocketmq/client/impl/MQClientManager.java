@@ -26,15 +26,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+//= 管理所有的MQClientInstance
 public class MQClientManager {
     private final static Logger log = ClientLogger.getLog();
     private static MQClientManager instance = new MQClientManager();
     private AtomicInteger factoryIndexGenerator = new AtomicInteger();
-    private ConcurrentMap<String/* clientId */, MQClientInstance> factoryTable =
-            new ConcurrentHashMap<String, MQClientInstance>();
+
+    //= manage多个MQClientInstance
+    //= <clientId, MQClientInstance>
+    private ConcurrentMap<String, MQClientInstance> factoryTable = new ConcurrentHashMap<String, MQClientInstance>();
 
     private MQClientManager() {
-
     }
 
     public static MQClientManager getInstance() {
@@ -49,9 +51,7 @@ public class MQClientManager {
         String clientId = clientConfig.buildMQClientId();
         MQClientInstance instance = this.factoryTable.get(clientId);
         if (null == instance) {
-            instance =
-                    new MQClientInstance(clientConfig.cloneClientConfig(),
-                            this.factoryIndexGenerator.getAndIncrement(), clientId, rpcHook);
+            instance = new MQClientInstance(clientConfig.cloneClientConfig(), this.factoryIndexGenerator.getAndIncrement(), clientId, rpcHook);
             MQClientInstance prev = this.factoryTable.putIfAbsent(clientId, instance);
             if (prev != null) {
                 instance = prev;

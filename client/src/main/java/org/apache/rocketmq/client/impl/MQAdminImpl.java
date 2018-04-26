@@ -71,10 +71,13 @@ public class MQAdminImpl {
         createTopic(key, newTopic, queueNum, 0);
     }
 
+    //= 创建新topic, 并指定mq的数目
     public void createTopic(String key, String newTopic, int queueNum, int topicSysFlag) throws MQClientException {
         try {
+            //= 根据key选择topic放在哪些broker上
             TopicRouteData topicRouteData = this.mQClientFactory.getMQClientAPIImpl().getTopicRouteInfoFromNameServer(key, timeoutMillis);
             List<BrokerData> brokerDataList = topicRouteData.getBrokerDatas();
+
             if (brokerDataList != null && !brokerDataList.isEmpty()) {
                 Collections.sort(brokerDataList);
 

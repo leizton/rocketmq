@@ -58,6 +58,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+//= 组合 MQClientAPIImpl
+//= 组合 PullMessageService 和 DefaultMQProducer
 public class MQClientInstance {
     private final static long LOCK_TIMEOUT_MILLIS = 3000;
     private final Logger log = ClientLogger.getLog();
@@ -568,7 +570,7 @@ public class MQClientInstance {
                 try {
                     TopicRouteData topicRouteData;
                     if (isDefault && defaultMQProducer != null) {
-                        //= 获取defaultMQProducer.createTopicKey这个主题的路由
+                        //= 获取defaultMQProducer.getCreateTopicKey()返回的topic的路由
                         topicRouteData = this.mQClientAPIImpl.getDefaultTopicRouteInfoFromNameServer(defaultMQProducer.getCreateTopicKey(),
                                 1000 * 3);
                         if (topicRouteData != null) {

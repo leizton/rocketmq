@@ -1,0 +1,25 @@
+@startuml
+
+newpage client init
+Test -> MQClientManager: getAndCreateMQClientInstance(ClientConfig)
+MQClientManager -> MQClientInstance: new
+MQClientInstance -> MQClientInstance: new NettyClientConfig \n new ClientRemotingProcessor
+MQClientInstance -> MQClientAPIImpl: new(nettyClientConfig, clientRemotingProcessor)
+MQClientInstance -> MQClientInstance: new MQAdminImpl \n new PullMessageService \n new DefaultMQProducer
+MQClientManager -> Test: 返回MQClientInstance
+
+newpage producer init
+DefaultMQProducer -> DefaultMQProducer: constructor \n new DefaultMQProducerImpl
+
+newpage createTopic
+Test -> MQAdmin: static createTopic(nameSrvAddr, clusterName, topic, queueNum)
+MQAdmin -> DefaultMQAdminExt: new \n setNamesrvAddr(nameSrvAddr)
+DefaultMQAdminExt -> DefaultMQAdminExtImpl: new \n setNamesrvAddr()
+MQAdmin -> DefaultMQAdminExt: start()
+DefaultMQAdminExt -> DefaultMQAdminExtImpl: start()
+DefaultMQAdminExtImpl -> DefaultMQAdminExtImpl: getOrCreate mqClientInstance
+MQAdmin -> DefaultMQAdminExt: createTopic(key=clusterName, topic, queueNum)
+DefaultMQAdminExt -> DefaultMQAdminExtImpl: createTopic(key, topic, queueNum, flag=0)
+DefaultMQAdminExtImpl -> MQAdminImpl: createTopic(flag=0)
+
+@enduml
